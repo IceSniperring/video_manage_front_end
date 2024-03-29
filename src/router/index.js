@@ -5,6 +5,7 @@ import Vue3 from "@/view/Vue3.vue";
 import Animation from "@/view/Animation.vue";
 import Player from "@/view/Player.vue";
 import Upload from "@/view/Upload.vue";
+import Search from "@/view/Search.vue";
 
 export const router = createRouter({
     history: createWebHashHistory(),
@@ -19,7 +20,7 @@ export const router = createRouter({
         },
         {
             path: "/vue3Learn",
-            component: Vue3
+            component: Vue3,
         },
         {
             path: "/movie",
@@ -38,6 +39,11 @@ export const router = createRouter({
         {
             path: '/upload',
             component: Upload
+        },
+        {
+            name: 'search',
+            path: '/search',
+            component: Search
         }
     ]
 })

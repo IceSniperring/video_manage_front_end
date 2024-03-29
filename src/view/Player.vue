@@ -109,9 +109,7 @@ onBeforeRouteLeave((to, from, next) => {
 
 <style scoped>
 #play-box {
-	border-radius: 5px;
-	overflow: hidden;
-	width: 70%;
+	width: 80%;
 	box-shadow: 0 0 10px;
 }
 </style>

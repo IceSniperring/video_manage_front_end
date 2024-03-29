@@ -1,13 +1,13 @@
 <template>
-	<el-container>
-		<el-header style="border:1px solid black">
+	<el-container id="container">
+		<el-header>
 			<Header/>
 		</el-header>
 		<el-container>
-			<el-aside style="width: 130px;border:1px solid black">
+			<el-aside style="width: 130px;">
 				<Navbar/>
 			</el-aside>
-			<el-main style="border:1px solid black">
+			<el-main>
 				<router-view>
         </router-view>
 			</el-main>
@@ -21,4 +21,9 @@ import Header from "@/components/Header.vue";
 </script>
 
 <style scoped>
+#container {
+  border-radius: 10px;
+  box-shadow: 0 0 10px;
+  overflow: hidden;
+}
 </style>
