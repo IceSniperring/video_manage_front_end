@@ -28,7 +28,11 @@
 				</el-menu-item>
 			</router-link>
 		</el-sub-menu>
-
+		<router-link to="/upload">
+			<el-menu-item index="2-3">
+				<span>上传</span>
+			</el-menu-item>
+		</router-link>
 	</el-menu>
 </template>
 
