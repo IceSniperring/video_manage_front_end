@@ -3,6 +3,7 @@ import Home from "@/view/Home.vue";
 import Movie from "@/view/Movie.vue";
 import Vue3 from "@/view/Vue3.vue";
 import Animation from "@/view/Animation.vue";
+import Player from "@/view/Player.vue";
 
 export const router = createRouter({
     history: createWebHashHistory(),
@@ -26,6 +27,12 @@ export const router = createRouter({
         {
             path: "/animation",
             component: Animation
+        },
+        {
+            name: 'player',
+            path: "/player",
+            component: Player,
+            props: true
         }
     ]
 })

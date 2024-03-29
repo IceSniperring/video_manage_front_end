@@ -8,7 +8,8 @@
 				<Navbar/>
 			</el-aside>
 			<el-main style="border:1px solid black">
-				<router-view></router-view>
+				<router-view>
+        </router-view>
 			</el-main>
 		</el-container>
 	</el-container>

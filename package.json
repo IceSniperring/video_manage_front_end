@@ -12,8 +12,10 @@
     "axios": "^1.6.8",
     "element-plus": "^2.6.2",
     "pinia": "^2.1.7",
+    "plyr": "^3.7.8",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "xgplayer": "^3.0.15"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
