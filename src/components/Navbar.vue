@@ -16,9 +16,9 @@
 				</el-menu-item>
 			</router-link>
 
-			<router-link to="/movie">
+			<router-link to="/game">
 				<el-menu-item index="2-2">
-					<span>电影</span>
+					<span>游戏</span>
 				</el-menu-item>
 			</router-link>
 
@@ -29,7 +29,7 @@
 			</router-link>
 		</el-sub-menu>
 		<router-link to="/upload">
-			<el-menu-item index="2-3">
+			<el-menu-item index="3">
 				<span>上传</span>
 			</el-menu-item>
 		</router-link>

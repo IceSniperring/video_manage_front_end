@@ -11,8 +11,8 @@ const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-app.provide("serverUrl","http://127.0.0.1:8080/")
-//全局守卫
+app.provide("serverUrl","http://127.0.0.1:8080")
+
 app.use(router)
 app.use(Element)
 app.use(createPinia())

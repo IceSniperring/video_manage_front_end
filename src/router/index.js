@@ -1,11 +1,12 @@
 import {createRouter, createWebHashHistory} from "vue-router";
 import Home from "@/view/Home.vue";
-import Movie from "@/view/Movie.vue";
+import Movie from "@/view/Game.vue";
 import Vue3 from "@/view/Vue3.vue";
 import Animation from "@/view/Animation.vue";
 import Player from "@/view/Player.vue";
 import Upload from "@/view/Upload.vue";
 import Search from "@/view/Search.vue";
+import Game from "@/view/Game.vue";
 
 export const router = createRouter({
     history: createWebHashHistory(),
@@ -22,23 +23,21 @@ export const router = createRouter({
             name: "vue3Learn",
             path: "/vue3Learn",
             component: Vue3,
-            query: {
-                page: 1
-            }
         },
         {
-            path: "/movie",
-            component: Movie
+            name: "game",
+            path: "/game",
+            component: Game,
         },
         {
+            name: "animation",
             path: "/animation",
-            component: Animation
+            component: Animation,
         },
         {
             name: 'player',
             path: "/player",
-            component: Player,
-            props: true
+            component: Player
         },
         {
             path: '/upload',

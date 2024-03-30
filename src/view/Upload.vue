@@ -9,7 +9,9 @@
               name="video"
               :auto-upload="false"
               ref="videoUpload"
-              :on-change="onVideoChange">
+              :on-change="onVideoChange"
+              accept="video/*"
+              :on-remove="onRemoveVideo">
             <el-icon class="el-icon--upload">
               <upload-filled/>
             </el-icon>
@@ -29,9 +31,9 @@
                 <el-form-item>
                   <label>请选择分类：</label>
                   <el-radio-group v-model="kind">
-                    <el-radio value="vue">Vue3</el-radio>
-                    <el-radio value="animation">动漫</el-radio>
-                    <el-radio value="movie">电影</el-radio>
+                    <el-radio-button value="vue">Vue3</el-radio-button>
+                    <el-radio-button label="game" value="game">游戏</el-radio-button>
+                    <el-radio-button label="aimation" value="animation">动漫</el-radio-button>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item>
@@ -52,7 +54,7 @@
                     </el-icon>
                   </el-upload>
                 </el-form-item>
-                <el-button type="primary"
+                <el-button type="primary" style="width: 71%"
                            @click="submitForm">提交
                 </el-button>
               </el-form>
@@ -80,7 +82,7 @@
 import {Plus, UploadFilled} from "@element-plus/icons-vue";
 import {computed, inject, ref} from "vue";
 import axios from "axios";
-import {resultProps} from "element-plus";
+import {ElNotification, resultProps} from "element-plus";
 
 let kind = ref() //类型
 let postUrl = ref("") //提交Url，用于前端图片显示
@@ -88,7 +90,7 @@ let postUpload = ref() //ref绑定的封面，方便操作
 let videoUpload = ref() //ref绑定的视频，方便操作
 let percentCompleted = ref(0)
 let formData = new FormData() //formData封装视频以及其余参数
-const url = inject("serverUrl") + "insertTest"
+const url = inject("serverUrl") + "/videoUpload"
 let config = {
   headers: {
     'Content-Type': 'multipart/form-data' //指定类型
@@ -101,25 +103,77 @@ let config = {
 
 
 const onVideoChange = (file, fileList) => {
-  if (fileList.length > 1) {
-    fileList.splice(0, 1);
+  if (file.raw.type.startsWith("video/")) {
+    //保证只能上传一个文件
+    if (fileList.length > 1) {
+      fileList.splice(0, 1);
+    }
+    formData.set("videoFile", file.raw)
+  } else {
+    const index = fileList.indexOf(file);
+    if (index !== -1) {
+      fileList.splice(index, 1);
+    }
+    ElNotification({
+      title: '错误',
+      message: '只能上传视频(mp4、avi等格式)',
+      type: 'error',
+    })
   }
-  console.log(file.raw)
-  formData.set("videoFile", file.raw)
+}
+const onRemoveVideo = () => {
+  formData.delete("videoFile")
 }
 
 //动态修改图片地址并增加formData内容
-const onPostChange = (file) => {
-  postUrl.value = URL.createObjectURL(file.raw)
-  formData.set("postFile", file.raw)
+const onPostChange = (file, fileList) => {
+  if (file.raw.type.startsWith("image/")) {
+    postUrl.value = URL.createObjectURL(file.raw)
+    //保证只有一张照片
+    if (fileList.length > 1) {
+      fileList.splice(0, 1)
+    }
+    formData.set("postFile", file.raw)
+  } else {
+    ElNotification({
+      title: '错误',
+      message: '只能上传图片(jpeg、jpg、png、gif等格式)',
+      type: 'error',
+    })
+  }
 }
 
 function submitForm() {
-  formData.set("uid", "1")
-  formData.set("kind", kind.value)
-  axios.post(url, formData, config).then((response) => {
-    console.log(response)
-  })
+  if (formData.get("videoFile") == null) {
+    ElNotification({
+      title: '错误',
+      message: '请选择视频',
+      type: 'error',
+    })
+  } else if (formData.get("postFile") == null) {
+    ElNotification({
+      title: '错误',
+      message: '请选择封面',
+      type: 'error',
+    })
+  } else {
+    //进度清零
+    percentCompleted.value = 0
+    formData.set("uid", "1")
+    //哦按段是否选择了分类
+    if (kind.value == null) {
+      ElNotification({
+        title: '错误',
+        message: '请选择分类',
+        type: 'error',
+      })
+    } else {
+      formData.set("kind", kind.value)
+      axios.post(url, formData, config).then((response) => {
+        console.log(response)
+      })
+    }
+  }
 }
 </script>
 

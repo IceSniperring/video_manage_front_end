@@ -3,7 +3,7 @@
     <el-header>
       <h3>
         分类：
-        <span style="font-size: 22px" id="kind">Vue3学习（加入前端吧！）</span>
+        <span style="font-size: 22px" id="kind">游戏</span>
       </h3>
       <h1>页数：{{ route.query.page }}</h1>
     </el-header>
@@ -54,7 +54,6 @@ import axios from "axios";
 const router = useRouter()
 const route = useRoute()
 const url = inject("serverUrl") + "/api/getVideoByKind"
-let pageNum = 0
 let pagination = reactive({
   total: 0,
   currentPage: 1,
@@ -63,10 +62,10 @@ let pagination = reactive({
   background: true,
   small: false,
 })
+let pageNum = 0
 let videoInfoList = ref([])
 
 onMounted(() => {
-  console.log(router.currentRoute.value.query.page)
   //修改分页标签为中文“跳至”
   document.getElementsByClassName(
       "el-pagination__goto"
@@ -74,30 +73,30 @@ onMounted(() => {
   //挂载时查询本页数据
   axios.get(url, {
     params: {
-      kind: "vue",
+      kind: "game",
       page: router.currentRoute.value.query.page
     }
   }).then((response) => {
     videoInfoList.value = response.data.records
     pagination.total = response.data.total
-    pageNum = response.data.pages
   })
 })
 
 function getData() {
   router.push({
-    name: 'vue3Learn',
+    name: 'game',
     query: {
       page: pagination.currentPage
     }
   })
   axios.get(url, {
     params: {
-      kind: "vue",
+      kind: "game",
       page: pagination.currentPage
     }
   }).then((response) => {
     videoInfoList.value = response.data.records
+    pageNum = response.data.pages
   })
 }
 
@@ -108,13 +107,12 @@ onBeforeRouteUpdate((to, from) => {
   }
   axios.get(url, {
     params: {
-      kind: "vue",
+      kind: "game",
       page: to.query.page
     }
   }).then((response) => {
     videoInfoList.value = response.data.records
     pagination.total = response.data.total
-    console.log(response.data)
   })
   pagination.currentPage = parseInt(to.query.page)
 })
