@@ -1,18 +1,18 @@
 <template>
-	<el-container id="container">
-		<el-header>
-			<Header/>
-		</el-header>
-		<el-container>
-			<el-aside style="width: 130px;">
-				<Navbar/>
-			</el-aside>
-			<el-main>
-				<router-view>
+  <el-container id="container">
+    <el-header>
+      <Header/>
+    </el-header>
+    <el-container>
+      <el-aside style="width: 130px;">
+        <Navbar/>
+      </el-aside>
+      <el-main>
+        <router-view>
         </router-view>
-			</el-main>
-		</el-container>
-	</el-container>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <script setup>

@@ -1,12 +1,12 @@
 <script setup>
-import {useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 
-const route = useRouter()
+const route = useRoute()
 
 </script>
 
 <template>
-  <h1>搜索<span id="keyword">{{ route.currentRoute.value.query.keyword }}</span>的结果</h1>
+  <h1>搜索<span id="keyword">{{ route.query.keyword }}</span>的结果</h1>
 </template>
 
 <style scoped>

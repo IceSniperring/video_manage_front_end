@@ -14,14 +14,7 @@
             class="input-with-select"
         >
           <template #append>
-            <router-link :to="{
-              name: 'search',
-              query:{
-                keyword:searchInput
-              }
-            }">
-              <el-button :icon="Search"/>
-            </router-link>
+            <el-button :icon="Search" @click="search"/>
           </template>
         </el-input>
       </div>
@@ -40,11 +33,22 @@
 
 import {Search} from "@element-plus/icons-vue";
 import {ref} from "vue";
+import {useRouter} from "vue-router";
 
 let searchInput = ref()
 
 let nickname = ref("哈哈")
 
+const router = useRouter()
+
+let search = () => {
+  router.push({
+    path: 'search',
+    query: {
+      keyword: searchInput.value
+    }
+  })
+}
 </script>
 
 <style scoped>

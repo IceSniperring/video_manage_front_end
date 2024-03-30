@@ -1,11 +1,11 @@
 <script setup>
-import {onBeforeRouteLeave, useRouter} from "vue-router";
+import {onBeforeRouteLeave, useRoute} from "vue-router";
 import 'xgplayer/dist/index.min.css'
 import {onMounted} from "vue";
 import Plyr from "plyr"
 import 'plyr/dist/plyr.css'
 
-const route = useRouter()
+const route = useRoute()
 let player = null
 onMounted(() => {
 	player = new Plyr("#player", {
@@ -96,13 +96,13 @@ onBeforeRouteLeave((to, from, next) => {
 </script>
 
 <template>
-	<h2>Vue3尚硅谷{{ route.currentRoute.value.query.title }}</h2>
+	<h2>Vue3尚硅谷{{ route.query.title }}</h2>
 	<!--  <div id="player"></div>-->
 	<div id="play-box">
 		<video id="player" class="player"
 		       playsinline controls data-poster="/path/to/poster.jpg"
 		       style="--plyr-color-main: #3eae7d;--plyr-video-control-color-hover:#000000">
-			<source :src="`/src/assets/vue_video/Vue3尚硅谷 (${route.currentRoute.value.query.title}).mp4`" type="video/mp4"/>
+			<source :src="`/vue_video/Vue3尚硅谷 (${route.query.title}).mp4`" type="video/mp4"/>
 		</video>
 	</div>
 </template>

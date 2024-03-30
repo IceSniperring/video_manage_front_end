@@ -19,8 +19,12 @@ export const router = createRouter({
             component: Home
         },
         {
+            name: "vue3Learn",
             path: "/vue3Learn",
             component: Vue3,
+            query: {
+                page: 1
+            }
         },
         {
             path: "/movie",

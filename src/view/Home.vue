@@ -1,5 +1,5 @@
 <template>
-  <h1>主页</h1>
+  <h1>🏡主页</h1>
   <el-container>
     <el-main>
       <el-row id="carousel">
@@ -12,7 +12,7 @@
                     title: item.toString()
                 }
 							}">
-                <el-image :src="`/src/assets/vue_video/image/Vue3尚硅谷 (${item}).jpg`"
+                <el-image :src="`/vue_video/image/Vue3尚硅谷 (${item}).jpg`"
                           style="width: 100%;"/>
               </router-link>
             </el-carousel-item>
@@ -28,7 +28,7 @@
                 }
 							}">
             <el-card class="box-card">
-              <el-image :src="`/src/assets/vue_video/image/Vue3尚硅谷 (${i}).jpg`"
+              <el-image :src="`/vue_video/image/Vue3尚硅谷 (${i}).jpg`"
                         alt="加载失败" :fit="'scale-down'"/>
               <p style="margin-left: 5px">Vue3尚硅谷 ({{ i }})</p>
             </el-card>
@@ -44,12 +44,8 @@
 </script>
 
 <style scoped>
-.el-carousel__item h3 {
-  color: #475669;
-  opacity: 0.75;
-  line-height: 200px;
-  margin: 0;
-  text-align: center;
+h1 {
+  font-size: 25px;
 }
 
 .el-carousel__item:nth-child(2n) {
