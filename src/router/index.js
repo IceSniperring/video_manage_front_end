@@ -4,6 +4,7 @@ import Player from "@/view/Player.vue";
 import Upload from "@/view/Upload.vue";
 import Search from "@/view/Search.vue";
 import Kind from "@/view/Kind.vue";
+import VideoManage from "@/view/VideoManage.vue";
 
 export const router = createRouter({
     history: createWebHashHistory(),
@@ -13,7 +14,7 @@ export const router = createRouter({
             redirect: "home"
         },
         {
-            name:"home",
+            name: "home",
             path: "/home",
             component: Home
         },
@@ -35,6 +36,11 @@ export const router = createRouter({
             name: 'search',
             path: '/search',
             component: Search
+        },
+        {
+            name: "videoManage",
+            path: "/videoManage",
+            component: VideoManage
         }
     ]
 })

@@ -94,7 +94,7 @@ import {useRouter} from "vue-router";
 
 
 const router = useRouter()
-let kind = ref() //类型
+let kind = ref("") //类型
 let postUrl = ref("") //提交Url，用于前端图片显示
 let postUpload = ref() //ref绑定的封面，方便操作
 let videoUpload = ref() //ref绑定的视频，方便操作
@@ -192,7 +192,7 @@ function submitForm() {
     percentCompleted.value = 0
     formData.set("uid", userInfo.value.id)
     //是否选择了分类
-    if (kind.value == null) {
+    if (kind.value == "") {
       ElNotification({
         title: '错误',
         message: '请输入分类',
