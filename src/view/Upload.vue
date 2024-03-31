@@ -1,6 +1,17 @@
 <template>
   <el-container>
     <el-main>
+      <el-row :gutter="20" align="middle" justify="center" style="margin-bottom: 10px">
+        <el-col :span="15">
+          <el-progress
+              type="line"
+              :percentage="percentCompleted"
+              :stroke-width="20"
+              :text-inside="true"
+              v-if="percentCompleted!=0">
+          </el-progress>
+        </el-col>
+      </el-row>
       <el-row :gutter="20" align="middle" justify="center">
         <el-col :span="15">
           <el-upload
@@ -11,7 +22,8 @@
               ref="videoUpload"
               :on-change="onVideoChange"
               accept="video/*"
-              :on-remove="onRemoveVideo">
+              :on-remove="onRemoveVideo"
+              :disabled="isLogged">
             <el-icon class="el-icon--upload">
               <upload-filled/>
             </el-icon>
@@ -20,22 +32,21 @@
             </div>
             <template #tip>
               <div class="el-upload__tip">
-                <h3>mp4格式 < 300MB</h3>
+                <h3>视频格式 < 1GB（一次只能上传一个）</h3>
               </div>
             </template>
           </el-upload>
+        </el-col>
+      </el-row>
 
-          <el-row justify="center" align="middle">
-            <el-col :span="12">
+      <el-row :gutter="20" align="middle" justify="center">
+        <el-col :span="15">
+          <el-row justify="space-between">
+            <el-col :span="6">
               <el-form>
                 <el-form-item>
-                  <label>请输入你的分类：</label>
-                  <el-input v-model="kind">
-                  </el-input>
-                </el-form-item>
-                <el-form-item>
                   <!--后面需要补上上传-->
-                  <label>请选择封面：</label>
+                  <label>请上传封面：</label>
                   <el-upload
                       class="post-uploader"
                       :show-file-list="false"
@@ -43,7 +54,7 @@
                       :auto-upload="false"
                       ref="postUpload"
                       :on-change="onPostChange"
-                  >
+                      :disabled="isLogged">
                     <el-image v-if="postUrl" :src="postUrl" class="post" alt=""
                               style="width: 200px;height: 140px;" :fit="'contain'"/>
                     <el-icon v-else class="post-uploader-icon">
@@ -51,22 +62,20 @@
                     </el-icon>
                   </el-upload>
                 </el-form-item>
-                <el-button type="primary" style="width: 71%"
-                           @click="submitForm">提交
+              </el-form>
+            </el-col>
+            <el-col :span="6">
+              <el-form>
+                <el-form-item>
+                  <label>请输入你的分类：</label>
+                  <el-input v-model="kind" :disabled="isLogged"></el-input>
+                </el-form-item>
+                <el-button type="primary" style="width: 100%"
+                           @click="submitForm" :disabled="isLogged">提交
                 </el-button>
               </el-form>
             </el-col>
-            <el-col :span="12">
-              <el-progress
-                  type="dashboard"
-                  :percentage="percentCompleted"
-                  :stroke-width="30"
-                  :width="300">
-                <template #default="{ percentage }">
-                  <span class="percentage-label">上传进度</span>
-                  <span class="percentage-value">{{ percentage }}%</span>
-                </template>
-              </el-progress>
+            <el-col>
             </el-col>
           </el-row>
         </el-col>
@@ -83,6 +92,7 @@ import {ElNotification} from "element-plus";
 import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";
 import {useRouter} from "vue-router";
 
+
 const router = useRouter()
 let kind = ref() //类型
 let postUrl = ref("") //提交Url，用于前端图片显示
@@ -92,6 +102,7 @@ let percentCompleted = ref(0)
 let formData = new FormData() //formData封装视频以及其余参数
 let userInfo = ref();
 const url = inject("serverUrl") + "/api/videoUpload"
+let isLogged = true //判断用户是否登录,未登录就禁用组件
 let config = {
   headers: {
     'Content-Type': 'multipart/form-data' //指定类型
@@ -115,14 +126,8 @@ onBeforeMount(() => {
       //延迟200ms显示登陆界面
       useLoginFormOpen().dialogFormVisible = true
     }, 200)
-    //监听用户是否手动关闭，如果是的，那么返回主页面
-    window.addEventListener('click', () => {
-      if (useLoginFormOpen().manualClose === true) {
-        router.push({
-          name: "home"
-        })
-      }
-    })
+  } else {
+    isLogged = false
   }
 })
 

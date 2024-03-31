@@ -44,7 +44,6 @@
       <el-dialog v-model="useLoginFormOpen().dialogFormVisible"
                  :title="loginTitle"
                  width="500" style="border-radius: 10px"
-                 :before-close="onBeforeDialogClose"
                  :lock-scroll="false"><!--解除禁用滚动条，防止闪屏-->
         <el-form :model="form" v-show="isLogin">
           <el-form-item label="用户名或者邮箱" :label-width="formLabelWidth">
@@ -127,12 +126,12 @@ let changeForm = () => {
   }
 }
 //登录对话框被手动关闭
-let onBeforeDialogClose = () => {
-  //将组件设为不可视
-  useLoginFormOpen().dialogFormVisible = false
-  //通知组件时用户手动关闭
-  useLoginFormOpen().manualClose = true
-}
+// let onBeforeDialogClose = () => {
+//   //将组件设为不可视
+//   useLoginFormOpen().dialogFormVisible = false
+//   //通知组件时用户手动关闭
+//   useLoginFormOpen().manualClose = true
+// }
 
 onBeforeMount(() => {
   userInfo = JSON.parse(localStorage.getItem("userInfo"))
@@ -217,8 +216,8 @@ async function submit() {
       logged_in.value = true;
       //隐藏表
       useLoginFormOpen().dialogFormVisible = false
-      //非手动关闭
-      useLoginFormOpen().manualClose = false
+      //刷新
+      window.location.reload()
     }
   }
 }
