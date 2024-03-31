@@ -4,7 +4,7 @@
     <el-main>
       <el-row id="carousel">
         <el-col :span="24">
-          <el-carousel motion-blur>
+          <el-carousel motion-blur height="600px">
             <el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id">
               <router-link :to="{
 								 name:'player',
@@ -14,7 +14,7 @@
                 }
 							}">
                 <el-image :src="`${inject('serverUrl')}${postInfo.postPath}`"
-                          alt="加载失败" style="width: 100%"/>
+                          alt="加载失败" style="width: 100%" :fit="'cover'"/>
               </router-link>
             </el-carousel-item>
           </el-carousel>
@@ -39,6 +39,7 @@
       </el-row>
     </el-main>
   </el-container>
+  <el-backtop :right="20" :bottom="20"/>
 </template>
 
 <script setup>

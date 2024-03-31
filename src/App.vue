@@ -4,9 +4,9 @@
       <Header/>
     </el-header>
     <el-container>
-      <el-aside style="width: 130px;">
+      <el-header>
         <Navbar/>
-      </el-aside>
+      </el-header>
       <el-main>
         <router-view>
         </router-view>

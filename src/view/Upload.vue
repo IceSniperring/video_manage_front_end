@@ -77,16 +77,20 @@
 
 <script setup lang="ts">
 import {Plus, UploadFilled} from "@element-plus/icons-vue";
-import {computed, inject, ref} from "vue";
+import {inject, onBeforeMount, ref} from "vue";
 import axios from "axios";
-import {ElNotification, resultProps} from "element-plus";
+import {ElNotification} from "element-plus";
+import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 let kind = ref() //类型
 let postUrl = ref("") //提交Url，用于前端图片显示
 let postUpload = ref() //ref绑定的封面，方便操作
 let videoUpload = ref() //ref绑定的视频，方便操作
 let percentCompleted = ref(0)
 let formData = new FormData() //formData封装视频以及其余参数
+let userInfo = ref();
 const url = inject("serverUrl") + "/api/videoUpload"
 let config = {
   headers: {
@@ -98,6 +102,29 @@ let config = {
   }
 }
 
+//只有登陆了才能上传文件
+onBeforeMount(() => {
+  userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
+  if (userInfo.value == null) {
+    ElNotification({
+      title: '错误',
+      message: '需要登录才能上传哦！请你登陆',
+      type: 'error',
+    })
+    setTimeout(() => {
+      //延迟200ms显示登陆界面
+      useLoginFormOpen().dialogFormVisible = true
+    }, 200)
+    //监听用户是否手动关闭，如果是的，那么返回主页面
+    window.addEventListener('click', () => {
+      if (useLoginFormOpen().manualClose === true) {
+        router.push({
+          name: "home"
+        })
+      }
+    })
+  }
+})
 
 const onVideoChange = (file, fileList) => {
   if (file.raw.type.startsWith("video/")) {
@@ -146,23 +173,26 @@ function submitForm() {
       title: '错误',
       message: '请选择视频',
       type: 'error',
+      position: 'bottom-left'
     })
   } else if (formData.get("postFile") == null) {
     ElNotification({
       title: '错误',
       message: '请选择封面',
       type: 'error',
+      position: 'bottom-left'
     })
   } else {
     //进度清零
     percentCompleted.value = 0
-    formData.set("uid", "1")
-    //哦按段是否选择了分类
+    formData.set("uid", userInfo.value.id)
+    //是否选择了分类
     if (kind.value == null) {
       ElNotification({
         title: '错误',
         message: '请输入分类',
         type: 'error',
+        position: 'bottom-left'
       })
     } else {
       formData.set("kind", kind.value)

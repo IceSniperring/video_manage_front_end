@@ -28,8 +28,8 @@
       </el-row>
     </el-main>
     <el-footer>
-      <el-row justify="center" align="middle">
-        <el-col :span="6">
+      <el-row justify="center">
+        <el-col :span="8" :offset="3" style="justify-content: center;display: flex">
           <el-pagination
               v-model:current-page="pagination.currentPage"
               :page-size="pagination.pageSize"
@@ -77,7 +77,6 @@ onMounted(() => {
 });
 
 function getData() {
-  console.log(route.query.type)
   router.push({
     name: "kind",
     query: {

@@ -10,11 +10,12 @@ export const router = createRouter({
     routes: [
         {
             path: "/",
-            redirect: "/home"
+            redirect: "home"
         },
         {
+            name:"home",
             path: "/home",
-            component: () => Home
+            component: Home
         },
         {
             name: "kind",

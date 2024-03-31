@@ -1,5 +1,6 @@
 <template>
-  <el-menu>
+  <el-menu
+      mode="horizontal">
     <router-link to="/home">
       <el-menu-item index="1">
         <span>主页</span>
@@ -21,23 +22,6 @@
           <span>{{ kind }}</span>
         </el-menu-item>
       </router-link>
-      <!--      <router-link to="/vue3Learn">-->
-      <!--        <el-menu-item index="2-1">-->
-      <!--          <span>Vue3学习</span>-->
-      <!--        </el-menu-item>-->
-      <!--      </router-link>-->
-
-      <!--      <router-link to="/game">-->
-      <!--        <el-menu-item index="2-2">-->
-      <!--          <span>游戏</span>-->
-      <!--        </el-menu-item>-->
-      <!--      </router-link>-->
-
-      <!--      <router-link to="/animation">-->
-      <!--        <el-menu-item index="2-3">-->
-      <!--          <span>动漫</span>-->
-      <!--        </el-menu-item>-->
-      <!--      </router-link>-->
     </el-sub-menu>
     <router-link to="/upload">
       <el-menu-item index="3">
@@ -56,7 +40,6 @@ let kindList = []
 onMounted(async () => {
   let response = await axios.get(url)
   kindList = response.data
-  console.log(kindList)
 })
 </script>
 
