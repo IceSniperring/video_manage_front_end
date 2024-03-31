@@ -1,5 +1,8 @@
+.el-col {
+  margin: 15px 0;
+}
+
 .el-image {
-  border-radius: 5px;
   transition: .2s ease-in;
 }
 
@@ -8,9 +11,23 @@
 }
 
 .el-card {
-  border-radius: 10px;
+  border-radius: 5px;
+  --el-card-padding: 0px;
+  border-width: 0;
 }
 
 .el-card:hover {
   box-shadow: 2px 4px 6px;
+}
+
+.box-card p {
+  margin: 10px;
+  width: 94%;
+  overflow: hidden;
+  display: -webkit-box;
+  /*文字换行4次，此后省略*/
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 }

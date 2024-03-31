@@ -29,12 +29,9 @@
             <el-col :span="12">
               <el-form>
                 <el-form-item>
-                  <label>请选择分类：</label>
-                  <el-radio-group v-model="kind">
-                    <el-radio-button value="vue">Vue3</el-radio-button>
-                    <el-radio-button label="game" value="game">游戏</el-radio-button>
-                    <el-radio-button label="aimation" value="animation">动漫</el-radio-button>
-                  </el-radio-group>
+                  <label>请输入你的分类：</label>
+                  <el-input v-model="kind">
+                  </el-input>
                 </el-form-item>
                 <el-form-item>
                   <!--后面需要补上上传-->
@@ -90,7 +87,7 @@ let postUpload = ref() //ref绑定的封面，方便操作
 let videoUpload = ref() //ref绑定的视频，方便操作
 let percentCompleted = ref(0)
 let formData = new FormData() //formData封装视频以及其余参数
-const url = inject("serverUrl") + "/videoUpload"
+const url = inject("serverUrl") + "/api/videoUpload"
 let config = {
   headers: {
     'Content-Type': 'multipart/form-data' //指定类型
@@ -164,7 +161,7 @@ function submitForm() {
     if (kind.value == null) {
       ElNotification({
         title: '错误',
-        message: '请选择分类',
+        message: '请输入分类',
         type: 'error',
       })
     } else {

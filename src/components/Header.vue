@@ -45,6 +45,7 @@ let search = () => {
   router.push({
     path: 'search',
     query: {
+      page: 1,
       keyword: searchInput.value
     }
   })

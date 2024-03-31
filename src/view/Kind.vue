@@ -3,9 +3,9 @@
     <el-header>
       <h3>
         分类：
-        <span style="font-size: 22px" id="kind">游戏</span>
+        <span style="font-size: 22px" id="kind">{{ route.query.type }}</span>
       </h3>
-      <h1>页数：{{ route.query.page }}</h1>
+      <h1>页数：{{ pagination.currentPage }}</h1>
     </el-header>
     <el-main>
       <el-row :gutter="20">
@@ -44,78 +44,70 @@
       </el-row>
     </el-footer>
   </el-container>
+  <el-backtop :right="20" :bottom="20"/>
 </template>
 
 <script setup>
-import {inject, onMounted, reactive, ref} from "vue";
+import {inject, onBeforeMount, onMounted, reactive} from "vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
-import axios from "axios";
+import {useVideoData} from "@/hooks/useVideoData.js";
 
 const router = useRouter()
 const route = useRoute()
-const url = inject("serverUrl") + "/api/getVideoByKind"
+
+const serverUrl = inject("serverUrl");
+//调用hooks获取必要数据
+const {videoInfoList, pageNum, total, fetchVideoData} = useVideoData(serverUrl);
 let pagination = reactive({
-  total: 0,
+  total: total,
   currentPage: 1,
   disabled: false,
   pageSize: 20,
   background: true,
   small: false,
 })
-let pageNum = 0
-let videoInfoList = ref([])
+
+
+onBeforeMount(() => {
+  fetchVideoData(route.query.type, route.query.page);
+});
 
 onMounted(() => {
-  //修改分页标签为中文“跳至”
-  document.getElementsByClassName(
-      "el-pagination__goto"
-  )[0].innerText = "跳至";
-  //挂载时查询本页数据
-  axios.get(url, {
-    params: {
-      kind: "game",
-      page: router.currentRoute.value.query.page
-    }
-  }).then((response) => {
-    videoInfoList.value = response.data.records
-    pagination.total = response.data.total
-  })
-})
+  document.getElementsByClassName("el-pagination__goto")[0].innerText = "跳至";
+});
 
 function getData() {
+  console.log(route.query.type)
   router.push({
-    name: 'game',
+    name: "kind",
     query: {
+      type: route.query.type,
       page: pagination.currentPage
     }
-  })
-  axios.get(url, {
-    params: {
-      kind: "game",
-      page: pagination.currentPage
-    }
-  }).then((response) => {
-    videoInfoList.value = response.data.records
-    pageNum = response.data.pages
-  })
+  });
+  fetchVideoData(route.query.type, pagination.currentPage);
 }
 
-//用户手动修改url
-onBeforeRouteUpdate((to, from) => {
-  if (to.query.page > pageNum) {
-    to.query.page = from.query.page
+onBeforeRouteUpdate((to, from, next) => {
+  //page大于给定页数，那么执行重定向
+  if (to.query.page > pageNum.value) {
+    next(false)
+    router.replace({
+      name: "kind",
+      query: {
+        kind: from.query.type,
+        page: from.query.page
+      }
+    })
+    //重新获取数据
+    pagination.currentPage = parseInt(from.query.page)
+    fetchVideoData(from.query.type, from.query.page);
+  } else {
+    pagination.currentPage = parseInt(to.query.page)
+    fetchVideoData(to.query.type, to.query.page);
+    next()
   }
-  axios.get(url, {
-    params: {
-      kind: "game",
-      page: to.query.page
-    }
-  }).then((response) => {
-    videoInfoList.value = response.data.records
-    pagination.total = response.data.total
-  })
-  pagination.currentPage = parseInt(to.query.page)
-})
+});
 </script>
 
 <style scoped>
