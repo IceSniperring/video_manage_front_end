@@ -8,7 +8,8 @@
               :percentage="percentCompleted"
               :stroke-width="20"
               :text-inside="true"
-              v-if="percentCompleted!=0">
+              v-if="percentCompleted!=0"
+              :status="percentCompleted==100?'success':'exception'">
           </el-progress>
         </el-col>
       </el-row>
@@ -86,7 +87,7 @@
 
 <script setup lang="ts">
 import {Plus, UploadFilled} from "@element-plus/icons-vue";
-import {inject, onBeforeMount, ref} from "vue";
+import {inject, onBeforeMount, ref, watchEffect} from "vue";
 import axios from "axios";
 import {ElNotification} from "element-plus";
 import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";
@@ -207,6 +208,17 @@ function submitForm() {
     }
   }
 }
+
+watchEffect(() => {
+  if (percentCompleted.value == 100) {
+    ElNotification({
+      title: '上传结果',
+      message: '上传成功',
+      type: 'success',
+      position: 'bottom-left'
+    })
+  }
+})
 </script>
 
 <style scoped>

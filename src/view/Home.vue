@@ -4,18 +4,18 @@
     <el-main>
       <el-row id="carousel">
         <el-col :span="24">
-          <el-carousel motion-blur height="600px">
-            <el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id">
+          <el-carousel motion-blur height="350px" type="card">
+            <el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id" :label="postInfo.title">
               <router-link :to="{
 								 name:'player',
                  query: {
-                    title: postInfo.title,
-                    path: postInfo.filePath
+                    id:postInfo.id
                 }
 							}">
                 <el-image :src="`${inject('serverUrl')}${postInfo.postPath}`"
                           alt="加载失败" style="width: 100%" :fit="'cover'"/>
               </router-link>
+
             </el-carousel-item>
           </el-carousel>
         </el-col>
@@ -25,8 +25,7 @@
           <router-link :to="{
 								 name:'player',
                  query: {
-                    title: videoInfo.title,
-                    path: videoInfo.filePath
+                    id:videoInfo.id
                 }
 							}">
             <el-card class="box-card">
@@ -94,19 +93,16 @@ h1 {
   margin: 15px 0;
 }
 
+.el-carousel__item {
+  border-radius: 10px;
+}
+
 .el-carousel__item:nth-child(2n) {
   background-color: #99a9bf;
 }
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
-}
-
-#carousel {
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 20px;
-  box-shadow: 2px 4px 6px;
 }
 
 .el-image {
@@ -141,9 +137,5 @@ h1 {
 
 a {
   text-decoration: none;
-}
-
-#content-container::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
 }
 </style>

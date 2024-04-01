@@ -2,10 +2,10 @@
   <el-container>
     <el-header>
       <h3>
-        分类：
+        🗂️分类：
         <span style="font-size: 22px" id="kind">{{ route.query.type }}</span>
       </h3>
-      <h1>页数：{{ pagination.currentPage }}</h1>
+      <h1>📖页数：{{ pagination.currentPage }}</h1>
     </el-header>
     <el-main>
       <el-row :gutter="20">
@@ -13,8 +13,7 @@
           <router-link :to="{
                 name:'player',
                 query:{
-                  title: videoInfo.title,
-                  path: videoInfo.filePath
+                  id:videoInfo.id
                 }
               }">
             <el-card class="box-card">
@@ -67,7 +66,7 @@ let pagination = reactive({
   small: false,
 })
 
-
+console.log(videoInfoList)
 onBeforeMount(() => {
   fetchVideoData(route.query.type, route.query.page);
 });

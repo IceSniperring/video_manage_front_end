@@ -125,7 +125,7 @@ const form = reactive({
 let avatar = ref()//用户头像
 let userInfo = []//用户所有信息
 const router = useRouter()//路由信息
-let searchInput = ref()//搜索框
+let searchInput = ref("")//搜索框
 let formData = new FormData()//封装图片以及其余参数
 let percentCompleted = ref(0)
 let config = {
@@ -138,13 +138,22 @@ let config = {
   }
 }
 let search = () => {
-  router.push({
-    path: 'search',
-    query: {
-      page: 1,
-      keyword: searchInput.value
-    }
-  })
+  if (searchInput.value !== "") {
+    router.push({
+      path: 'search',
+      query: {
+        page: 1,
+        keyword: searchInput.value
+      }
+    })
+  } else {
+    ElNotification({
+      title: '错误',
+      message: '请输入搜索内容',
+      type: 'error',
+      position: 'top-left'
+    })
+  }
 }
 let changeForm = () => {
   isLogin.value = !isLogin.value;
