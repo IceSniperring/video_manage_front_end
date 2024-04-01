@@ -46,22 +46,8 @@
             <el-col :span="6">
               <el-form>
                 <el-form-item>
-                  <!--后面需要补上上传-->
                   <label>请上传封面：</label>
-                  <el-upload
-                      class="post-uploader"
-                      :show-file-list="false"
-                      accept="image/*"
-                      :auto-upload="false"
-                      ref="postUpload"
-                      :on-change="onPostChange"
-                      :disabled="isLogged">
-                    <el-image v-if="postUrl" :src="postUrl" class="post" alt=""
-                              style="width: 200px;height: 140px;" :fit="'contain'"/>
-                    <el-icon v-else class="post-uploader-icon">
-                      <Plus/>
-                    </el-icon>
-                  </el-upload>
+                  <PostUpload/>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -86,18 +72,18 @@
 </template>
 
 <script setup lang="ts">
-import {Plus, UploadFilled} from "@element-plus/icons-vue";
-import {inject, onBeforeMount, ref} from "vue";
+import {UploadFilled} from "@element-plus/icons-vue";
+import {inject, onBeforeMount, onUnmounted, ref} from "vue";
 import axios from "axios";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";
 import {useRouter} from "vue-router";
 import {useKindListRefreshStore} from "@/store/KindListRefreshStore.js";
-
+import PostUpload from "@/components/PostUpload.vue";
+import {usePostUploadFile} from "@/store/PostUploadFileStore.js";
 
 const router = useRouter()
 let kind = ref("") //类型
-let postUrl = ref("") //提交Url，用于前端图片显示
 let postUpload = ref() //ref绑定的封面，方便操作
 let videoUpload = ref() //ref绑定的视频，方便操作
 let percentCompleted = ref(0)
@@ -107,6 +93,7 @@ const serverUrl = inject("serverUrl")
 const url = serverUrl + "/api/videoUpload"
 let isLogged = true //判断用户是否登录,未登录就禁用组件
 const KindListRefresh = useKindListRefreshStore()
+const postUploadFile = usePostUploadFile()
 let config = {
   headers: {
     'Content-Type': 'multipart/form-data' //指定类型
@@ -157,23 +144,6 @@ const onRemoveVideo = () => {
   formData.delete("videoFile")
 }
 
-//动态修改图片地址并增加formData内容
-const onPostChange = (file, fileList) => {
-  if (file.raw.type.startsWith("image/")) {
-    postUrl.value = URL.createObjectURL(file.raw)
-    //保证只有一张照片
-    if (fileList.length > 1) {
-      fileList.splice(0, 1)
-    }
-    formData.set("postFile", file.raw)
-  } else {
-    ElNotification({
-      title: '错误',
-      message: '只能上传图片(jpeg、jpg、png、gif等格式)',
-      type: 'error',
-    })
-  }
-}
 
 function ELNotification_result(title, message, type) {
   ElNotification({
@@ -186,12 +156,13 @@ function ELNotification_result(title, message, type) {
 async function submitForm() {
   if (formData.get("videoFile") == null) {
     ELNotification_result("错误", "请选择视频", "error")
-  } else if (formData.get("postFile") == null) {
+  } else if (postUploadFile.postFile == null) {
     ELNotification_result("错误", "请选择封面", "error")
   } else {
     //进度清零
     percentCompleted.value = 0
     formData.set("uid", userInfo.value.id)
+    formData.set("postFile", postUploadFile.postFile)
     //是否选择了分类
     if (kind.value == "") {
       ELNotification_result("错误", "请输入分类", "error")
@@ -227,16 +198,21 @@ async function submitForm() {
               id: video.id
             }
           })
-        }).catch(()=>{
+        }).catch(() => {
           ElMessage({
             type: "info",
-            message: userInfo.value.username+"已取消",
+            message: userInfo.value.username + "已取消",
           })
         })
       }
     }
   }
 }
+
+onUnmounted(() => {
+  //退出时置为空，防止出现后面实例依然存在的bug
+  postUploadFile.postFile = null
+})
 
 </script>
 

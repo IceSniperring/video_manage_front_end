@@ -22,7 +22,8 @@
         <el-table-column label="分类" prop="kind"/>
         <el-table-column fixed="right" label="操作" width="120">
           <template #default="scope">
-            <el-button link type="primary" size="default">
+            <el-button link type="primary" size="default"
+                       @click="openEditPanel">
               编辑
             </el-button>
             <el-button link type="primary" size="default"
@@ -32,16 +33,45 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog v-model="editVideoInfo"
+                 title="编辑此视频"
+                 width="500" style="border-radius: 10px"
+                 :lock-scroll="false"><!--解除禁用滚动条，防止闪屏-->
+        <el-form :model="form">
+          <el-form-item label="标题" :label-width="formLabelWidth">
+            <el-input v-model="form.title" autocomplete="off" style="width:50%"/>
+          </el-form-item>
+          <el-form-item label="请上传封面" :label-width="formLabelWidth">
+            <PostUpload/>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button type="primary" @click="submit">
+              确认
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
 
 <script setup>
-import {inject, onBeforeMount, ref} from "vue";
+import {inject, onBeforeMount, onUnmounted, reactive, ref} from "vue";
 import axios from "axios";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {useKindListRefreshStore} from "@/store/KindListRefreshStore.js";
+import {usePostUploadFile} from "@/store/PostUploadFileStore.js";
+import PostUpload from "@/components/PostUpload.vue";
 
+const postUploadFile = usePostUploadFile()
+const formLabelWidth = '100px'
+let editVideoInfo = ref(false)
+let form = reactive({
+  title: "",
+  post: ""
+})
 let userInfo = []
 let videoInfoTable = ref([])
 const serverUrl = inject("serverUrl")
@@ -101,6 +131,15 @@ function deleteVideo(id) {
   })
 }
 
+
+function openEditPanel() {
+  editVideoInfo.value = true
+}
+
+onUnmounted(() => {
+  //退出时置为空，防止出现后面实例依然存在的bug
+  postUploadFile.postFile = null
+})
 </script>
 
 <style scoped>

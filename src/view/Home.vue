@@ -3,7 +3,7 @@
   <el-container>
     <el-main>
       <el-row id="carousel">
-        <el-col :span="24">
+        <el-col :span="24" v-if="windowWidth>=800">
           <el-carousel motion-blur height="350px" type="card">
             <el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id" :label="postInfo.title">
               <router-link :to="{
@@ -54,6 +54,7 @@ let videoInfoList = ref([])
 let postInfoList = ref([])
 let page = ref(1)
 const KindListRefreshStore = useKindListRefreshStore()
+const windowWidth = ref(document.body.clientWidth)
 
 onMounted(async () => {
   window.addEventListener('scroll', listenBottomOut)
