@@ -47,9 +47,10 @@
 </template>
 
 <script setup>
-import {inject, onBeforeMount, onMounted, reactive} from "vue";
+import {inject, onBeforeMount, onMounted, reactive, ref} from "vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import {useVideoData} from "@/hooks/useVideoData.js";
+import axios from "axios";
 
 const router = useRouter()
 const route = useRoute()
@@ -66,7 +67,6 @@ let pagination = reactive({
   small: false,
 })
 
-console.log(videoInfoList)
 onBeforeMount(() => {
   fetchVideoData(route.query.type, route.query.page);
 });

@@ -14,7 +14,7 @@
             <div style="display: flex; align-items: center">
               <el-image :src="`${inject('serverUrl')}${scope.row.postPath}`"
                         :preview-src-list="[`${inject('serverUrl')}${scope.row.postPath}`]"
-                        :initial-index="4" style="width: 100px" preview-teleported/>
+                        :initial-index="4" style="width: 100px;border-radius: 2px" preview-teleported/>
             </div>
           </template>
         </el-table-column>
@@ -47,7 +47,7 @@
         </el-form>
         <template #footer>
           <div class="dialog-footer">
-            <el-button type="primary" @click="submit">
+            <el-button type="primary" @click="editSubmit()">
               确认
             </el-button>
           </div>
@@ -80,7 +80,9 @@ onBeforeMount(async () => {
   let response = await axios.get(videoUrl, {params: {uid: userInfo.id}})
   videoInfoTable.value = response.data
 })
+let percentCompleted = ref(0)
 let loading = ref(false)
+let formData = new FormData()
 const KindListRefreshStore = useKindListRefreshStore()
 
 function ELMessage_result(message, type) {
@@ -96,6 +98,16 @@ function ELNotification_result(title, message, type) {
     message: message,
     type: type
   })
+}
+
+let config = {
+  headers: {
+    'Content-Type': 'multipart/form-data' //指定类型
+  },
+  //获得上传进度
+  onUploadProgress: progressEvent => {
+    percentCompleted.value = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+  }
 }
 
 function deleteVideo(id) {
@@ -141,11 +153,34 @@ function deleteVideo(id) {
 function openEditPanel(videoInfo) {
   editVideoInfo.value = true
   form.title = videoInfo.title
+  formData.set("id", videoInfo.id)//存储id
 }
 
-function submit() {
+async function editSubmit() {
   if (form.title === "") ELNotification_result("错误", "请输入标题", "error")
   else if (postUploadFile.postFile === null) ELNotification_result("错误", "请选择封面", "error")
+  else {
+    loading.value = true
+    formData.set("title", form.title)
+    formData.set("postFile", postUploadFile.postFile);
+    let response = await axios.put(serverUrl + "/api/updateVideoInfo", formData, config)
+    let {success, code} = response.data
+    if (!success) {
+      if (code === 2) ELNotification_result("修改结果", "未知错误", "error")
+      else if (code === 3) ELNotification_result("修改结果", "无法删除旧封面", "error")
+      else if (code === 4) ELNotification_result("修改结果", "无法保存新封面", "error")
+      else if (code === 5) ELNotification_result("修改结果", "该视频不存在，请刷新后重试", "error")
+    }
+    if (success) {
+      ELNotification_result("修改结果", "修改成功", "success")
+      editVideoInfo.value = false
+      //重新获取数据
+      axios.get(videoUrl, {params: {uid: userInfo.id}}).then((response) => {
+        videoInfoTable.value = response.data
+      })
+      loading.value = false
+    }
+  }
 }
 
 onUnmounted(() => {

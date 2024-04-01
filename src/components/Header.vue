@@ -244,6 +244,10 @@ async function submit() {
     let response = await axios.post("http://localhost:8080/api/login", {
       "username": form.username,
       "password": form.password
+    }).catch(() => {
+      console.log("请求错误")
+      //刷新网页
+      window.location.reload()
     })
     //success为是否成功，code为后台传输的代码，1表示成功，2表示密码错误，3表示用户不存在
     let {success, code} = response.data
@@ -269,6 +273,10 @@ async function submit() {
         params: {
           username: form.username
         }
+      }).catch(() => {
+        console.log("请求错误")
+        //刷新网页
+        window.location.reload()
       })
       //本地存储
       localStorage.setItem("userInfo", JSON.stringify(response.data))
@@ -303,6 +311,11 @@ async function submit() {
       formData.set("email", form.email);
       formData.set("password", form.password)
       let response = await axios.post(serverUrl + "/api/signup", formData, config)
+          .catch(() => {
+            console.log("请求错误")
+            //刷新网页
+            window.location.reload()
+          })
       const {success, code} = response.data
       let signUpResult = "success";
       let signUpMessage = "注册成功"

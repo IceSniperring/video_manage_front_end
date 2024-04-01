@@ -14,6 +14,8 @@ export function useVideoData(serverUrl) {
                     kind: kind,
                     page: page
                 }
+            }).catch(()=>{
+
             });
             videoInfoList.value = response.data.records;
             total.value = response.data.total;
