@@ -27,13 +27,13 @@
                      :src="avatar"/>
         </template>
         <el-row>
-          <el-col :span="12" :offset="6">
+          <el-col :span="16" :offset="4">
             <p class="userMenu"
                @click="logout">
-              注销</p>
+              🧑‍💻注销</p>
             <p class="userMenu"
                @click="videoManage">
-              管理稿件
+              📄管理稿件
             </p>
           </el-col>
         </el-row>

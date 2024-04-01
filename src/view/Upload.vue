@@ -89,7 +89,7 @@
 import {Plus, UploadFilled} from "@element-plus/icons-vue";
 import {inject, onBeforeMount, ref, watchEffect} from "vue";
 import axios from "axios";
-import {ElNotification} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";
 import {useRouter} from "vue-router";
 
@@ -131,7 +131,6 @@ onBeforeMount(() => {
     isLogged = false
   }
 })
-
 const onVideoChange = (file, fileList) => {
   if (file.raw.type.startsWith("video/")) {
     //保证只能上传一个文件
@@ -173,52 +172,47 @@ const onPostChange = (file, fileList) => {
   }
 }
 
-function submitForm() {
+function ELNotification_result(title, message, type) {
+  ElNotification({
+    title: title,
+    message: message,
+    type: type
+  })
+}
+
+async function submitForm() {
   if (formData.get("videoFile") == null) {
-    ElNotification({
-      title: '错误',
-      message: '请选择视频',
-      type: 'error',
-      position: 'bottom-left'
-    })
+    ELNotification_result("错误", "请选择视频", "error")
   } else if (formData.get("postFile") == null) {
-    ElNotification({
-      title: '错误',
-      message: '请选择封面',
-      type: 'error',
-      position: 'bottom-left'
-    })
+    ELNotification_result("错误", "请选择封面", "error")
   } else {
     //进度清零
     percentCompleted.value = 0
     formData.set("uid", userInfo.value.id)
     //是否选择了分类
     if (kind.value == "") {
-      ElNotification({
-        title: '错误',
-        message: '请输入分类',
-        type: 'error',
-        position: 'bottom-left'
-      })
+      ELNotification_result("错误", "请输入分类", "error")
     } else {
       formData.set("kind", kind.value)
-      axios.post(url, formData, config).then((response) => {
-        console.log(response)
-      })
+      let response = await axios.post(url, formData, config)
+      const {success, code} = response.data
+      console.log(code)
+      if (!success) {
+        if (code === 2) {
+          ELNotification_result("上传结果","视频上传失败","error")
+        } else if (code === 3) {
+          ELNotification_result("上传结果","封面上传失败","error")
+        } else if (code === 4) {
+          ELNotification_result("上传结果","视频和封面都上传失败","error")
+        }
+      }
+      else if(success){
+        ELNotification_result("上传结果","上传成功","success")
+      }
     }
   }
 }
 
-watchEffect(() => {
-  if (percentCompleted.value == 100) {
-    ElNotification({
-      title: '上传结果',
-      message: '上传成功',
-      type: 'success',
-      position: 'bottom-left'
-    })
-  }
-})
 </script>
 
 <style scoped>

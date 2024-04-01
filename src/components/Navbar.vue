@@ -1,8 +1,11 @@
 <template>
   <el-menu
-      mode="horizontal">
+      mode="horizontal"
+      active-text-color="#3eae7d"
+      menu-trigger="click"
+      :close-on-click-outside="true">
     <router-link to="/home">
-      <el-menu-item index="1">
+      <el-menu-item index="1" style="border-radius: 10px">
         <span>主页</span>
       </el-menu-item>
     </router-link>
@@ -24,7 +27,7 @@
       </router-link>
     </el-sub-menu>
     <router-link to="/upload">
-      <el-menu-item index="3">
+      <el-menu-item index="3" style="border-radius: 10px">
         <span>上传</span>
       </el-menu-item>
     </router-link>
@@ -47,4 +50,8 @@ onMounted(async () => {
 a {
   text-decoration: none;
 }
+.el-menu.el-menu--horizontal{
+  border: none;
+}
+
 </style>
