@@ -42,9 +42,10 @@
 </template>
 
 <script setup>
-import {inject, onMounted, ref} from "vue";
+import {inject, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import axios from "axios";
+import {useKindListRefreshStore} from "@/store/KindListRefreshStore.js";
 
 const router = useRouter()
 const urlVideo = inject("serverUrl") + "/api/getRandomVideo"
@@ -52,6 +53,7 @@ const urlPost = inject("serverUrl") + "/api/getRandomPost"
 let videoInfoList = ref([])
 let postInfoList = ref([])
 let page = ref(1)
+const KindListRefreshStore = useKindListRefreshStore()
 
 onMounted(async () => {
   window.addEventListener('scroll', listenBottomOut)

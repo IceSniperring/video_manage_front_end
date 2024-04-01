@@ -35,22 +35,37 @@
 </template>
 
 <script setup>
-import {inject, onMounted} from "vue";
+import {inject, onMounted, ref, watchEffect} from "vue";
 import axios from "axios";
+import {useKindListRefreshStore} from "@/store/KindListRefreshStore.js";
 
+const KindListRefreshStore = useKindListRefreshStore();
 let url = inject("serverUrl") + "/api/getKind"
-let kindList = []
+let kindList = ref([])
 onMounted(async () => {
   let response = await axios.get(url)
-  kindList = response.data
+  kindList.value = response.data
 })
+
+
+watchEffect(async () => {
+      //动态刷新分类列表，减少割裂感
+      if (KindListRefreshStore.KindListRefresh) {
+        let response = await axios.get(url)
+        kindList.value = response.data
+        //置回
+        KindListRefreshStore.KindListRefresh = false
+      }
+    }
+)
 </script>
 
 <style scoped>
 a {
   text-decoration: none;
 }
-.el-menu.el-menu--horizontal{
+
+.el-menu.el-menu--horizontal {
   border: none;
 }
 

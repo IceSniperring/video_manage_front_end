@@ -87,11 +87,12 @@
 
 <script setup lang="ts">
 import {Plus, UploadFilled} from "@element-plus/icons-vue";
-import {inject, onBeforeMount, ref, watchEffect} from "vue";
+import {inject, onBeforeMount, ref} from "vue";
 import axios from "axios";
-import {ElMessage, ElNotification} from "element-plus";
+import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";
 import {useRouter} from "vue-router";
+import {useKindListRefreshStore} from "@/store/KindListRefreshStore.js";
 
 
 const router = useRouter()
@@ -102,8 +103,10 @@ let videoUpload = ref() //ref绑定的视频，方便操作
 let percentCompleted = ref(0)
 let formData = new FormData() //formData封装视频以及其余参数
 let userInfo = ref();
-const url = inject("serverUrl") + "/api/videoUpload"
+const serverUrl = inject("serverUrl")
+const url = serverUrl + "/api/videoUpload"
 let isLogged = true //判断用户是否登录,未登录就禁用组件
+const KindListRefresh = useKindListRefreshStore()
 let config = {
   headers: {
     'Content-Type': 'multipart/form-data' //指定类型
@@ -195,19 +198,41 @@ async function submitForm() {
     } else {
       formData.set("kind", kind.value)
       let response = await axios.post(url, formData, config)
-      const {success, code} = response.data
-      console.log(code)
+      const {success, code, video} = response.data
+      console.log(video)
       if (!success) {
         if (code === 2) {
-          ELNotification_result("上传结果","视频上传失败","error")
+          ELNotification_result("上传结果", "视频上传失败", "error")
         } else if (code === 3) {
-          ELNotification_result("上传结果","封面上传失败","error")
+          ELNotification_result("上传结果", "封面上传失败", "error")
         } else if (code === 4) {
-          ELNotification_result("上传结果","视频和封面都上传失败","error")
+          ELNotification_result("上传结果", "视频和封面都上传失败", "error")
         }
-      }
-      else if(success){
-        ELNotification_result("上传结果","上传成功","success")
+      } else if (success) {
+        //通知刷新分类列表
+        KindListRefresh.KindListRefresh = true
+        ELNotification_result("上传结果", "上传成功", "success")
+        ElMessageBox.confirm(
+            '上传成功，需要前往视频的播放页面吗？',
+            '上传结果',
+            {
+              lockScroll: false,
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+            }).then(() => {
+          router.push({
+            name: "player",
+            query: {
+              id: video.id
+            }
+          })
+        }).catch(()=>{
+          ElMessage({
+            type: "info",
+            message: userInfo.value.username+"已取消",
+          })
+        })
       }
     }
   }
