@@ -23,7 +23,7 @@
         <el-table-column fixed="right" label="操作" width="120">
           <template #default="scope">
             <el-button link type="primary" size="default"
-                       @click="openEditPanel">
+                       @click="openEditPanel(scope.row)">
               编辑
             </el-button>
             <el-button link type="primary" size="default"
@@ -39,7 +39,7 @@
                  :lock-scroll="false"><!--解除禁用滚动条，防止闪屏-->
         <el-form :model="form">
           <el-form-item label="标题" :label-width="formLabelWidth">
-            <el-input v-model="form.title" autocomplete="off" style="width:50%"/>
+            <el-input v-model="form.title" autocomplete="off"/>
           </el-form-item>
           <el-form-item label="请上传封面" :label-width="formLabelWidth">
             <PostUpload/>
@@ -69,8 +69,7 @@ const postUploadFile = usePostUploadFile()
 const formLabelWidth = '100px'
 let editVideoInfo = ref(false)
 let form = reactive({
-  title: "",
-  post: ""
+  title: ""
 })
 let userInfo = []
 let videoInfoTable = ref([])
@@ -88,6 +87,14 @@ function ELMessage_result(message, type) {
   ElMessage({
     type: type,
     message: message,
+  })
+}
+
+function ELNotification_result(title, message, type) {
+  ElNotification({
+    title: title,
+    message: message,
+    type: type
   })
 }
 
@@ -131,9 +138,14 @@ function deleteVideo(id) {
   })
 }
 
-
-function openEditPanel() {
+function openEditPanel(videoInfo) {
   editVideoInfo.value = true
+  form.title = videoInfo.title
+}
+
+function submit() {
+  if (form.title === "") ELNotification_result("错误", "请输入标题", "error")
+  else if (postUploadFile.postFile === null) ELNotification_result("错误", "请选择封面", "error")
 }
 
 onUnmounted(() => {

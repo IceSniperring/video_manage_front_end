@@ -57,6 +57,10 @@
                   <label>请输入你的分类：</label>
                   <el-input v-model="kind" :disabled="isLogged"></el-input>
                 </el-form-item>
+                <el-form-item>
+                  <label>请输入视频标题：</label>
+                  <el-input v-model="title" :disabled="isLogged"></el-input>
+                </el-form-item>
                 <el-button type="primary" style="width: 100%"
                            @click="submitForm" :disabled="isLogged">提交
                 </el-button>
@@ -84,6 +88,7 @@ import {usePostUploadFile} from "@/store/PostUploadFileStore.js";
 
 const router = useRouter()
 let kind = ref("") //类型
+let title = ref("")//标题
 let postUpload = ref() //ref绑定的封面，方便操作
 let videoUpload = ref() //ref绑定的视频，方便操作
 let percentCompleted = ref(0)
@@ -164,10 +169,13 @@ async function submitForm() {
     formData.set("uid", userInfo.value.id)
     formData.set("postFile", postUploadFile.postFile)
     //是否选择了分类
-    if (kind.value == "") {
+    if (kind.value === "") {
       ELNotification_result("错误", "请输入分类", "error")
+    } else if (title.value === "") {
+      ELNotification_result("错误", "请输入标题", "error")
     } else {
-      formData.set("kind", kind.value)
+      formData.set("kind", kind.value)//设置类型
+      formData.set("title", title.value)//设置标题
       let response = await axios.post(url, formData, config)
       const {success, code, video} = response.data
       console.log(video)
