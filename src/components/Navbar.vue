@@ -6,13 +6,13 @@
       :close-on-click-outside="true">
     <router-link to="/home">
       <el-menu-item index="1" style="border-radius: 10px">
-        <span>主页</span>
+        <span>🏡主页</span>
       </el-menu-item>
     </router-link>
 
     <el-sub-menu index="2">
       <template #title>
-        <span>分类</span>
+        <span>🗂️分类</span>
       </template>
       <router-link v-for="(kind,index) in kindList" :to="{
         name:'kind',
@@ -28,7 +28,7 @@
     </el-sub-menu>
     <router-link to="/upload">
       <el-menu-item index="3" style="border-radius: 10px">
-        <span>上传</span>
+        <span>⏏️上传</span>
       </el-menu-item>
     </router-link>
   </el-menu>
@@ -38,6 +38,7 @@
 import {inject, onMounted, ref, watchEffect} from "vue";
 import axios from "axios";
 import {useKindListRefreshStore} from "@/store/KindListRefreshStore.js";
+import {useRouter} from "vue-router";
 
 const KindListRefreshStore = useKindListRefreshStore();
 let url = inject("serverUrl") + "/api/getKind"

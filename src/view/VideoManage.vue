@@ -1,13 +1,29 @@
 <template>
   <el-container>
     <el-main>
-      <h1>{{ userInfo.username }}的稿件：</h1>
+      <el-row>
+        <el-col :span="16">
+          <h1>{{ userInfo.username }}的稿件：</h1>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="danger" v-show="idArray.length!==0"
+                     @click="deleteVideos">
+            批量删除
+          </el-button>
+        </el-col>
+        <el-col :span="6">
+          <el-input v-model="tableSearch" placeholder="搜索视频"/>
+        </el-col>
+      </el-row>
+
       <el-table
-          :data="videoInfoTable"
+          :data="filterVideoInfo"
           style="width: 100%"
           row-key="id"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-          v-loading="loading">
+          v-loading="loading"
+          @selection-change="handelSelectionChange" stripe>
+        <el-table-column type="selection" width="55"/>
         <el-table-column prop="title" label="视频名称"/>
         <el-table-column label="封面">
           <template #default="scope">
@@ -20,7 +36,7 @@
         </el-table-column>
         <el-table-column prop="uploadDate" label="上传时间"/>
         <el-table-column label="分类" prop="kind"/>
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" width="150" label="操作">
           <template #default="scope">
             <el-button link type="primary" size="default"
                        @click="openEditPanel(scope.row)">
@@ -58,12 +74,13 @@
 </template>
 
 <script setup>
-import {inject, onBeforeMount, onUnmounted, reactive, ref} from "vue";
+import {computed, inject, onBeforeMount, onUnmounted, reactive, ref} from "vue";
 import axios from "axios";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {useKindListRefreshStore} from "@/store/KindListRefreshStore.js";
 import {usePostUploadFile} from "@/store/PostUploadFileStore.js";
 import PostUpload from "@/components/PostUpload.vue";
+import {useRouter} from "vue-router";
 
 const postUploadFile = usePostUploadFile()
 const formLabelWidth = '100px'
@@ -73,17 +90,26 @@ let form = reactive({
 })
 let userInfo = []
 let videoInfoTable = ref([])
+const tableSearch = ref()
+const filterVideoInfo = computed(() =>
+    videoInfoTable.value.filter((data) =>
+        !tableSearch.value ||
+        data.title.toLowerCase().includes(tableSearch.value.toLowerCase())
+    )
+)
 const serverUrl = inject("serverUrl")
 const videoUrl = serverUrl + "/api/getVideoByUid"
+let percentCompleted = ref(0)
+let loading = ref(false)
+let formData = new FormData()
+const router = useRouter()
+const KindListRefreshStore = useKindListRefreshStore()
+
 onBeforeMount(async () => {
   userInfo = JSON.parse(localStorage.getItem("userInfo"))
   let response = await axios.get(videoUrl, {params: {uid: userInfo.id}})
   videoInfoTable.value = response.data
 })
-let percentCompleted = ref(0)
-let loading = ref(false)
-let formData = new FormData()
-const KindListRefreshStore = useKindListRefreshStore()
 
 function ELMessage_result(message, type) {
   ElMessage({
@@ -110,6 +136,12 @@ let config = {
   }
 }
 
+let idArray = ref([])//id数组，保存多选框的id
+function handelSelectionChange(val) {
+  idArray.value = val.map(obj => obj.id);
+}
+
+//删除某一个
 function deleteVideo(id) {
   ElMessageBox.confirm(
       '确定要删除吗',
@@ -142,8 +174,61 @@ function deleteVideo(id) {
       //通知刷新分类列表
       KindListRefreshStore.KindListRefresh = true
       loading.value = false
-    }).catch(() => {
+    }).catch((error) => {
       ELMessage_result("出现异常", "error")
+      router.push(({
+        name: "error",
+        query: {
+          code: error.response.status
+        }
+      }))
+    })
+  }).catch(() => {
+    ELMessage_result(userInfo.username + "取消了删除", "info")
+  })
+}
+
+//批量删除
+function deleteVideos() {
+  ElMessageBox.confirm(
+      '确定要删除这些视频吗',
+      '删除确认',
+      {
+        lockScroll: false,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).then(() => {
+    loading.value = true
+    axios.delete(serverUrl + "/api/deleteVideos", {
+      params: {
+        idList: idArray.value.join(",")//传输数组
+      }
+    }).then((response) => {
+      const {deleteStatus, failedId} = response.data
+      if (!deleteStatus.success && failedId !== -1) {
+        if (deleteStatus.code === 2) ELMessage_result(failedId + "视频删除失败", "error")
+        else if (deleteStatus.code === 3) ELMessage_result(failedId + "封面删除失败", "error")
+        else if (deleteStatus.code === 4) ELMessage_result(failedId + "视频和封面都删除失败", "error")
+        else if (deleteStatus.code === 5) ELMessage_result(failedId + "数据不存在", "error")
+      } else if (deleteStatus.success && failedId === -1) {
+        ELMessage_result("删除成功", "success")
+      }
+      //重新获取数据
+      axios.get(videoUrl, {params: {uid: userInfo.id}}).then((response) => {
+        videoInfoTable.value = response.data
+      })
+      //通知刷新分类列表
+      KindListRefreshStore.KindListRefresh = true
+      loading.value = false
+    }).catch((error) => {
+      ELMessage_result("出现异常", "error")
+      router.push(({
+        name: "error",
+        query: {
+          code: error.response.status
+        }
+      }))
     })
   }).catch(() => {
     ELMessage_result(userInfo.username + "取消了删除", "info")

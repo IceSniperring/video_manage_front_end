@@ -1,11 +1,13 @@
 <script setup>
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 </script>
 
 <template>
   <div id="main">
     <div class="fof">
-      <h1>错误 Code : 404</h1>
+      <h1>错误 Code : {{ route.query.code}}</h1>
     </div>
   </div>
 </template>

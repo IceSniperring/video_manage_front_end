@@ -105,6 +105,7 @@ import {Plus, Search} from "@element-plus/icons-vue";
 import {ref, reactive, inject, onBeforeMount} from "vue";
 import {useRouter} from "vue-router";
 import axios from "axios";
+import {encrypt} from '@/utils/rsaEncrypt'
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";//登陆表格状态
 
@@ -243,11 +244,14 @@ async function submit() {
     //登录请求
     let response = await axios.post("http://localhost:8080/api/login", {
       "username": form.username,
-      "password": form.password
-    }).catch(() => {
-      console.log("请求错误")
-      //刷新网页
-      window.location.reload()
+      "password": encrypt(form.password)
+    }).catch((error) => {
+      router.push(({
+        name: "error",
+        query: {
+          code: error.response.status
+        }
+      }))
     })
     //success为是否成功，code为后台传输的代码，1表示成功，2表示密码错误，3表示用户不存在
     let {success, code} = response.data
@@ -260,6 +264,8 @@ async function submit() {
       loginMessage = "密码错误！"
     } else if (code === 3) {
       loginMessage = "用户不存在，请注册！"
+    } else if (code === 4) {
+      loginMessage = "未知错误"
     }
     ElNotification({
       title: '登陆结果',
@@ -273,10 +279,6 @@ async function submit() {
         params: {
           username: form.username
         }
-      }).catch(() => {
-        console.log("请求错误")
-        //刷新网页
-        window.location.reload()
       })
       //本地存储
       localStorage.setItem("userInfo", JSON.stringify(response.data))
@@ -309,12 +311,15 @@ async function submit() {
     } else {
       formData.set("username", form.username)
       formData.set("email", form.email);
-      formData.set("password", form.password)
+      formData.set("password", form.password)//加密
       let response = await axios.post(serverUrl + "/api/signup", formData, config)
-          .catch(() => {
-            console.log("请求错误")
-            //刷新网页
-            window.location.reload()
+          .catch((error) => {
+            router.push(({
+              name: "error",
+              query: {
+                code: error.response.status
+              }
+            }))
           })
       const {success, code} = response.data
       let signUpResult = "success";

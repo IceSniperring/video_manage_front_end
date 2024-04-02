@@ -4,7 +4,7 @@
   <el-container>
     <el-main>
       <el-row :gutter="20">
-        <el-col :span="21">
+        <el-col :span="24">
           <div id="play-box">
             <video id="player" class="player"
                    playsinline
@@ -14,26 +14,24 @@
             </video>
           </div>
         </el-col>
-        <el-col :span="3">
-          <el-row>
-            <h4>为你推荐</h4>
-          </el-row>
-          <el-row v-for="randomVideoInfo in random4Video" align="middle">
-            <el-col>
-              <router-link :to="{
+      </el-row>
+      <el-row>
+        <h4>为你推荐</h4>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="6" v-for="randomVideoInfo in random4Video">
+          <router-link :to="{
                 name:'player',
                 query:{
                   id: randomVideoInfo.id
                 }
               }">
-                <el-card class="box-card">
-                  <el-image :src="`${inject('serverUrl')}${randomVideoInfo.postPath}`"
-                            alt="加载失败" :fit="'scale-down'"/>
-                  <p style="margin-left: 5px" id="el-card-title">{{ randomVideoInfo.title }}</p>
-                </el-card>
-              </router-link>
-            </el-col>
-          </el-row>
+            <el-card class="box-card">
+              <el-image :src="`${inject('serverUrl')}${randomVideoInfo.postPath}`"
+                        alt="加载失败" :fit="'scale-down'"/>
+              <p style="margin-left: 5px" id="el-card-title">{{ randomVideoInfo.title }}</p>
+            </el-card>
+          </router-link>
         </el-col>
       </el-row>
     </el-main>
