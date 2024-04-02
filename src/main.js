@@ -10,7 +10,8 @@ const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-app.provide("serverUrl", "http://127.0.0.1:8080")
+app.provide("serverUrl", "http://192.168.31.200:10001") //服务器地址
+app.provide("videoSourceUrl", "http://192.168.31.200:10003") //视频资源地址
 app.use(router)
 app.use(Element)
 app.use(createPinia())

@@ -9,7 +9,8 @@
     </el-header>
     <el-main>
       <el-row :gutter="20">
-        <el-col style="" :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="(videoInfo,index) in videoInfoList" :key="index">
+        <el-col style="" :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="(videoInfo,index) in videoInfoList"
+                :key="index">
           <router-link :to="{
                 name:'player',
                 query:{
@@ -17,7 +18,7 @@
                 }
               }">
             <el-card class="box-card">
-              <el-image :src="`${inject('serverUrl')}${videoInfo.postPath}`"
+              <el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
                         style="width: 100%"
                         alt="加载失败" :fit="'contain'"/>
               <p>{{ videoInfo.title }}</p>

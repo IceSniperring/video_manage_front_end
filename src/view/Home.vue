@@ -14,7 +14,7 @@
                     id:postInfo.id
                 }
 							}">
-                <el-image :src="`${inject('serverUrl')}${postInfo.postPath}`"
+                <el-image :src="`${inject('videoSourceUrl')}${postInfo.postPath}`"
                           alt="加载失败" style="width: 100%" :fit="'cover'"/>
               </router-link>
 
@@ -32,7 +32,7 @@
                 }
 							}">
             <el-card class="box-card">
-              <el-image :src="`${inject('serverUrl')}${videoInfo.postPath}`"
+              <el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
                         alt="加载失败" :fit="'scale-down'"/>
               <p style="margin-left: 5px">{{ videoInfo.title }}</p>
             </el-card>

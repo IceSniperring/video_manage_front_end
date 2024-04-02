@@ -42,8 +42,6 @@ import SearchInput from "@/components/SearchInput.vue";
 import UserOperation from "@/components/UserOperation.vue";
 
 import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";
-import {SwitchFilled} from "@element-plus/icons-vue";
-
 </script>
 
 <style scoped>

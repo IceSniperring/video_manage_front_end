@@ -9,7 +9,7 @@
           <div id="play-box">
             <video id="player" class="player"
                    playsinline
-                   controls :data-poster="`${inject('serverUrl')}${videoInfo.postPath}`"
+                   controls :data-poster="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
                    style="--plyr-color-main: #3eae7d;--plyr-video-control-color-hover:#000000">
               <source :src="playerSrc" type="video/mp4"/>
             </video>
@@ -17,7 +17,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <h4>为你推荐</h4>
+        <h4>🎉为你推荐</h4>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="randomVideoInfo in random4Video">
@@ -28,7 +28,7 @@
                 }
               }">
             <el-card class="box-card">
-              <el-image :src="`${inject('serverUrl')}${randomVideoInfo.postPath}`"
+              <el-image :src="`${inject('videoSourceUrl')}${randomVideoInfo.postPath}`"
                         alt="加载失败" :fit="'scale-down'"/>
               <p style="margin-left: 5px" id="el-card-title">{{ randomVideoInfo.title }}</p>
             </el-card>
@@ -50,6 +50,7 @@ import {ElMessage} from "element-plus";
 const route = useRoute()
 let player = null
 const serverUrl = inject("serverUrl")
+const videoSourceUrl = inject("videoSourceUrl")
 let videoUrl = inject("serverUrl") + "/api/getVideoById"
 let videoRandomUrl = inject("serverUrl") + "/api/getRandom4Video"
 let videoInfo = ref([])
@@ -137,7 +138,7 @@ const windowWidth = ref(document.body.clientWidth)
 onBeforeMount(async () => {
   await axios.get(videoUrl, {params: {id: route.query.id}}).then((response) => {
     videoInfo.value = response.data
-    playerSrc.value = serverUrl + response.data.filePath
+    playerSrc.value = videoSourceUrl + response.data.filePath
     //数据获取成功之后渲染
     player = new Plyr("#player", playerOption)
   }).catch(() => {
@@ -153,7 +154,7 @@ onBeforeMount(async () => {
   })
 })
 
-onMounted(()=>{
+onMounted(() => {
   //窗口变化触发
   window.addEventListener('resize', () => {
     windowWidth.value = document.body.clientWidth
@@ -168,7 +169,7 @@ onBeforeRouteUpdate(async (to, from) => {
     //更新播放源
     player.source = {
       type: 'video',
-      sources: [{src: playerSrc.value, type: 'video/mp4'}],
+      sources: [{src: videoSourceUrl.value, type: 'video/mp4'}],
     };
   }).catch(() => {
     //出现意外时的弹窗

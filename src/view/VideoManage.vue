@@ -28,8 +28,8 @@
         <el-table-column label="封面">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <el-image :src="`${inject('serverUrl')}${scope.row.postPath}`"
-                        :preview-src-list="[`${inject('serverUrl')}${scope.row.postPath}`]"
+              <el-image :src="`${inject('videoSourceUrl')}${scope.row.postPath}`"
+                        :preview-src-list="[`${inject('videoSourceUrl')}${scope.row.postPath}`]"
                         :initial-index="4" style="width: 100px;border-radius: 2px" preview-teleported/>
             </div>
           </template>

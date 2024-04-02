@@ -92,6 +92,7 @@ import {Plus} from "@element-plus/icons-vue";
 //登陆表格状态
 
 const serverUrl = inject("serverUrl")//服务器url
+const videoSourceUrl = inject("videoSourceUrl")
 const formLabelWidth = '120px'//表格宽度
 let isLogin = ref(true)//表格是否是登陆界面
 const loginTitle = ref("登录")//表格标题
@@ -141,7 +142,7 @@ onBeforeMount(() => {
   if (userInfo !== null) {
     nickname = userInfo.username
     //获取头像
-    avatar = serverUrl + userInfo.avatarPath
+    avatar = videoSourceUrl + userInfo.avatarPath
     //登陆状态置为真
     logged_in.value = true;
   }
@@ -222,7 +223,7 @@ function ELNotification_function(message) {
 async function submit() {
   if (isLogin.value) {//登录逻辑
     //登录请求
-    let response = await axios.post("http://localhost:8080/api/login", {
+    let response = await axios.post(serverUrl + "/api/login", {
       "username": form.username,
       "password": encrypt(form.password)
     }).catch((error) => {
@@ -265,7 +266,7 @@ async function submit() {
       //获取用户名
       nickname = response.data.username
       //获取头像
-      avatarUrl.value = serverUrl + response.data.avatarPath
+      avatarUrl.value = videoSourceUrl + response.data.avatarPath
       //登陆状态置为真
       logged_in.value = true;
       //隐藏表
@@ -332,7 +333,7 @@ async function submit() {
         //获取用户名
         nickname = response.data.username
         //获取头像
-        avatarUrl.value = serverUrl + response.data.avatarPath
+        avatarUrl.value = videoSourceUrl + response.data.avatarPath
         //登陆状态置为真
         logged_in.value = true;
         //隐藏表
