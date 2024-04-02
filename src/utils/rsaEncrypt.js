@@ -3,12 +3,10 @@ import JSEncrypt from 'jsencrypt/bin/jsencrypt'
 // 加密
 export function encrypt(txt) {
     //rsa公钥
-    const publicKey = '-----BEGIN PUBLIC KEY-----\n' +
-        'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8P2yknA51gQq9ew8U2mrt7esV\n' +
-        'tDr7hh5dk5PG2ksyajFjWgL4hE9gUogtqx6nCNJOPl46obWIuT9JU7Sf2nGGDzHx\n' +
-        'Sz5TARsE7OQqAph1MJYW7I+VCwzUSCSLp6OOiLyW2OTZ+CXbaJG9qpcWhM2oYpYw\n' +
-        '4uc52F6WHliIY6Yi3QIDAQAB\n' +
-        '-----END PUBLIC KEY-----'
+    const publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvsJ+dMOJfUM6iGhEE4VwxfF0L\n" +
+        "6psLruCT2qbipf9IE8rmbipou/PargU+ygsl2ycOvhkrZwnxalo1xTWaWPjVRHt0\n" +
+        "3T6vbYmO3zhP3JRySgULV1tscsQZecbAAT3EunJHXGwtNoaV0Jfy8K6UWarretpZ\n" +
+        "ZlsFo+6+ltwnu6ZXvQIDAQAB"
     const encryptor = new JSEncrypt()
     encryptor.setPublicKey(publicKey) // 设置公钥
     return encryptor.encrypt(txt) // 对需要加密的数据进行加密

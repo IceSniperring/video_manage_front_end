@@ -311,7 +311,7 @@ async function submit() {
     } else {
       formData.set("username", form.username)
       formData.set("email", form.email);
-      formData.set("password", form.password)//加密
+      formData.set("password", encrypt(form.password))//加密
       let response = await axios.post(serverUrl + "/api/signup", formData, config)
           .catch((error) => {
             router.push(({
