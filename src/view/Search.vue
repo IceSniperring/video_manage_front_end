@@ -19,7 +19,7 @@
             <el-card class="box-card">
               <el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
                         style="width: 100%"
-                        alt="加载失败" :fit="'contain'"/>
+                        alt="加载失败" :fit="'contain'" v-loading="isLoading" @load="onLoaded"/>
               <p>{{ videoInfo.title }}</p>
             </el-card>
           </router-link>
@@ -62,7 +62,10 @@ let pagination = reactive({
   background: true,
   small: false,
 })
-
+let isLoading = ref(true)
+let onLoaded = () => {
+  isLoading.value = false
+}
 const windowWidth = ref(document.body.clientWidth)
 onMounted(async () => {
   //窗口变化触发

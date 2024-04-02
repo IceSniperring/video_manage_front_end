@@ -17,7 +17,6 @@
                 <el-image :src="`${inject('videoSourceUrl')}${postInfo.postPath}`"
                           alt="加载失败" style="width: 100%" :fit="'cover'"/>
               </router-link>
-
             </el-carousel-item>
           </el-carousel>
         </el-col>
@@ -33,7 +32,7 @@
 							}">
             <el-card class="box-card">
               <el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-                        alt="加载失败" :fit="'scale-down'"/>
+                        alt="加载失败" :fit="'scale-down'" v-loading="isLoading" @load="onLoaded"/>
               <p style="margin-left: 5px">{{ videoInfo.title }}</p>
             </el-card>
           </router-link>
@@ -56,6 +55,10 @@ const urlPost = inject("serverUrl") + "/api/getRandomPost"
 let videoInfoList = ref([])
 let postInfoList = ref([])
 let page = ref(1)
+let isLoading = ref(true)
+let onLoaded = () => {
+  isLoading.value = false
+}
 const windowWidth = ref(document.body.clientWidth)
 
 onMounted(async () => {

@@ -19,7 +19,7 @@
               }">
             <el-card class="box-card">
               <el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-                        style="width: 100%"
+                        style="width: 100%" v-loading="isLoading" @load="onLoaded"
                         alt="加载失败" :fit="'contain'"/>
               <p>{{ videoInfo.title }}</p>
             </el-card>
@@ -56,6 +56,10 @@ const router = useRouter()
 const route = useRoute()
 const windowWidth = ref(document.body.clientWidth) //检测宽度变化
 const serverUrl = inject("serverUrl");
+let isLoading = ref(true)
+let onLoaded = () => {
+  isLoading.value = false
+}
 //调用hooks获取必要数据
 const {videoInfoList, pageNum, total, fetchVideoData} = useVideoData(serverUrl);
 let pagination = reactive({

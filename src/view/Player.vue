@@ -2,9 +2,21 @@
   <el-container>
     <el-main>
       <el-row>
-        <h4>{{ videoInfo.title }}</h4>
+        <el-col>
+          <h4>{{ videoInfo.title }}</h4>
+        </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row justify="end" style="margin-top: -60px">
+        <el-col :span="4">
+          <h6>上传时间：{{ videoInfo.uploadDate }}</h6>
+        </el-col>
+      </el-row>
+      <el-row justify="end" style="margin-top: -70px">
+        <el-col :span="4">
+          <h6> 上传用户：{{ userInfo.username }}</h6>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" style="margin-top: -30px">
         <el-col :span="24">
           <div id="play-box">
             <video id="player" class="player"
@@ -52,8 +64,10 @@ let player = null
 const serverUrl = inject("serverUrl")
 const videoSourceUrl = inject("videoSourceUrl")
 let videoUrl = inject("serverUrl") + "/api/getVideoById"
+let userUrl = inject("serverUrl") + "/api/getUserById"
 let videoRandomUrl = inject("serverUrl") + "/api/getRandom4Video"
 let videoInfo = ref([])
+let userInfo = ref([])
 let random4Video = ref([])
 const playerSrc = ref("")
 const playerOption = {
@@ -138,6 +152,9 @@ const windowWidth = ref(document.body.clientWidth)
 onBeforeMount(async () => {
   await axios.get(videoUrl, {params: {id: route.query.id}}).then((response) => {
     videoInfo.value = response.data
+    axios.get(userUrl, {params: {id: videoInfo.value.uid}}).then((response) => {
+      userInfo.value = response.data
+    })
     playerSrc.value = videoSourceUrl + response.data.filePath
     //数据获取成功之后渲染
     player = new Plyr("#player", playerOption)
@@ -165,6 +182,9 @@ onMounted(() => {
 onBeforeRouteUpdate(async (to, from) => {
   await axios.get(videoUrl, {params: {id: to.query.id}}).then((response) => {
     videoInfo.value = response.data
+    axios.get(userUrl, {params: {id: videoInfo.value.uid}}).then((response) => {
+      userInfo.value = response.data
+    })
     playerSrc.value = serverUrl + response.data.filePath
     //更新播放源
     player.source = {
