@@ -1,9 +1,11 @@
 <template>
-  <h1>🏡主页</h1>
   <el-container>
+    <el-header>
+      <h1>🏡主页</h1>
+    </el-header>
     <el-main>
       <el-row id="carousel">
-        <el-col :span="24" v-if="windowWidth>=800">
+        <el-col :span="24" v-if="windowWidth>=1000">
           <el-carousel motion-blur height="350px" type="card">
             <el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id" :label="postInfo.title">
               <router-link :to="{
@@ -21,7 +23,8 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col v-for="videoInfo in videoInfoList" :span="6" :key="videoInfo.id">
+        <el-col v-for="videoInfo in videoInfoList" :span="windowWidth<600?24:(windowWidth<1200?12:6)"
+                :key="videoInfo.id">
           <router-link :to="{
 								 name:'player',
                  query: {
@@ -42,7 +45,7 @@
 </template>
 
 <script setup>
-import {inject, onMounted, ref, watch} from "vue";
+import {inject, onMounted, ref, watch, watchEffect} from "vue";
 import {useRouter} from "vue-router";
 import axios from "axios";
 import {useKindListRefreshStore} from "@/store/KindListRefreshStore.js";
@@ -53,11 +56,14 @@ const urlPost = inject("serverUrl") + "/api/getRandomPost"
 let videoInfoList = ref([])
 let postInfoList = ref([])
 let page = ref(1)
-const KindListRefreshStore = useKindListRefreshStore()
 const windowWidth = ref(document.body.clientWidth)
 
 onMounted(async () => {
   window.addEventListener('scroll', listenBottomOut)
+  //窗口变化触发
+  window.addEventListener('resize', () => {
+    windowWidth.value = document.body.clientWidth
+  })
   //开始先加载一遍
   const responseVideo = await axios.get(urlVideo, {
     params: {
@@ -127,8 +133,9 @@ h1 {
 }
 
 .box-card p {
+  font-size: 12px;
   margin: 10px;
-  width: 94%;
+  width: 90%;
   overflow: hidden;
   display: -webkit-box;
   /*文字换行4次，此后省略*/

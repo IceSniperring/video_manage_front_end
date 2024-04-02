@@ -31,6 +31,7 @@ export const router = createRouter({
             component: Player
         },
         {
+            name: "upload",
             path: '/upload',
             component: Upload
         },

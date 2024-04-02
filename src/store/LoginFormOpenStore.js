@@ -4,7 +4,8 @@ import {defineStore} from "pinia";
 export const useLoginFormOpen = defineStore('LoginFormOpen', {
     state() {
         return {
-            dialogFormVisible: false
+            dialogFormVisible: false,
+            asideFormVisible: false
         }
     }
 })

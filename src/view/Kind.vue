@@ -9,7 +9,7 @@
     </el-header>
     <el-main>
       <el-row :gutter="20">
-        <el-col style="" :span="6" v-for="(videoInfo,index) in videoInfoList" :key="index">
+        <el-col style="" :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="(videoInfo,index) in videoInfoList" :key="index">
           <router-link :to="{
                 name:'player',
                 query:{
@@ -47,13 +47,13 @@
 </template>
 
 <script setup>
-import {inject, onBeforeMount, onMounted, reactive} from "vue";
+import {inject, onBeforeMount, onMounted, reactive, ref} from "vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import {useVideoData} from "@/hooks/useVideoData.js";
 
 const router = useRouter()
 const route = useRoute()
-
+const windowWidth = ref(document.body.clientWidth) //检测宽度变化
 const serverUrl = inject("serverUrl");
 //调用hooks获取必要数据
 const {videoInfoList, pageNum, total, fetchVideoData} = useVideoData(serverUrl);
@@ -72,6 +72,10 @@ onBeforeMount(() => {
 
 onMounted(() => {
   document.getElementsByClassName("el-pagination__goto")[0].innerText = "跳至";
+  //窗口变化触发
+  window.addEventListener('resize', () => {
+    windowWidth.value = document.body.clientWidth
+  })
 });
 
 function getData() {
@@ -131,6 +135,7 @@ onBeforeRouteUpdate((to, from, next) => {
 }
 
 .box-card p {
+  font-size: 12px;
   margin: 10px;
   width: 94%;
   overflow: hidden;

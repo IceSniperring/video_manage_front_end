@@ -1,8 +1,9 @@
 <template>
-  <h2>{{ videoInfo.title }}</h2>
-  <!--  <div id="player"></div>-->
   <el-container>
     <el-main>
+      <el-row>
+        <h4>{{ videoInfo.title }}</h4>
+      </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
           <div id="play-box">
@@ -19,7 +20,7 @@
         <h4>为你推荐</h4>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="6" v-for="randomVideoInfo in random4Video">
+        <el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="randomVideoInfo in random4Video">
           <router-link :to="{
                 name:'player',
                 query:{
@@ -132,6 +133,7 @@ const playerOption = {
   }
 }
 
+const windowWidth = ref(document.body.clientWidth)
 onBeforeMount(async () => {
   await axios.get(videoUrl, {params: {id: route.query.id}}).then((response) => {
     videoInfo.value = response.data
@@ -148,6 +150,13 @@ onBeforeMount(async () => {
   })
   await axios.get(videoRandomUrl).then((response) => {
     random4Video.value = response.data
+  })
+})
+
+onMounted(()=>{
+  //窗口变化触发
+  window.addEventListener('resize', () => {
+    windowWidth.value = document.body.clientWidth
   })
 })
 
@@ -208,6 +217,7 @@ onBeforeRouteLeave((to, from, next) => {
 }
 
 .box-card p {
+  font-size: 12px;
   margin: 10px;
   width: 90%;
   overflow: hidden;

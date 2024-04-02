@@ -1,7 +1,10 @@
 <template>
   <el-container id="container">
-    <el-header>
+    <el-header v-if="windowWidth>1000">
       <Header/>
+    </el-header>
+    <el-header v-else>
+      <AsideMenu/>
     </el-header>
     <el-container>
       <el-header>
@@ -18,6 +21,16 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import Header from "@/components/Header.vue";
+import {onMounted, ref} from "vue";
+import AsideMenu from "@/components/AsideMenu.vue";
+
+const windowWidth = ref(document.body.clientWidth)
+onMounted(() => {
+  //窗口变化触发
+  window.addEventListener('resize', () => {
+    windowWidth.value = document.body.clientWidth
+  })
+})
 </script>
 
 <style scoped>

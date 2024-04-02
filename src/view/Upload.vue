@@ -43,7 +43,7 @@
       <el-row :gutter="20" align="middle" justify="center">
         <el-col :span="15">
           <el-row justify="space-between">
-            <el-col :span="6">
+            <el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)">
               <el-form>
                 <el-form-item>
                   <label>请上传封面：</label>
@@ -51,7 +51,7 @@
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)">
               <el-form>
                 <el-form-item>
                   <label>请输入你的分类：</label>
@@ -77,7 +77,7 @@
 
 <script setup lang="ts">
 import {UploadFilled} from "@element-plus/icons-vue";
-import {inject, onBeforeMount, onUnmounted, ref} from "vue";
+import {inject, onBeforeMount, onMounted, onUnmounted, ref} from "vue";
 import axios from "axios";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {useLoginFormOpen} from "@/store/LoginFormOpenStore.js";
@@ -118,13 +118,22 @@ onBeforeMount(() => {
       message: '需要登录才能上传哦！请你登陆',
       type: 'error',
     })
+    //如果是宽度小于1000px，那么也要先打开抽屉
+    if (document.body.clientWidth <= 1000) useLoginFormOpen().asideFormVisible = true
     setTimeout(() => {
-      //延迟200ms显示登陆界面
+      //延迟200ms显示登陆界面,以防撕裂感
       useLoginFormOpen().dialogFormVisible = true
-    }, 200)
+    }, 300)
   } else {
     isLogged = false
   }
+})
+const windowWidth = ref(document.body.clientWidth)
+onMounted(() => {
+  //窗口变化触发
+  window.addEventListener('resize', () => {
+    windowWidth.value = document.body.clientWidth
+  })
 })
 const onVideoChange = (file, fileList) => {
   if (file.raw.type.startsWith("video/")) {

@@ -8,7 +8,7 @@
     </el-header>
     <el-main>
       <el-row :gutter="20">
-        <el-col style="" :span="6" v-for="(videoInfo,index) in videoInfoList" :key="index">
+        <el-col style="" :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="(videoInfo,index) in videoInfoList" :key="index">
           <router-link :to="{
                 name:'player',
                 query:{
@@ -63,8 +63,12 @@ let pagination = reactive({
   small: false,
 })
 
-
+const windowWidth = ref(document.body.clientWidth)
 onMounted(async () => {
+  //窗口变化触发
+  window.addEventListener('resize', () => {
+    windowWidth.value = document.body.clientWidth
+  })
   let response = await axios.get(url, {
     params: {
       title: route.query.keyword,
@@ -149,8 +153,9 @@ onBeforeRouteUpdate(async (to, from, next) => {
 }
 
 .box-card p {
+  font-size: 12px;
   margin: 10px;
-  width: 94%;
+  width: 90%;
   overflow: hidden;
   display: -webkit-box;
   /*文字换行4次，此后省略*/
