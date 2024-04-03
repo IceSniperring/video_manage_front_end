@@ -185,11 +185,11 @@ onBeforeRouteUpdate(async (to, from) => {
     axios.get(userUrl, {params: {id: videoInfo.value.uid}}).then((response) => {
       userInfo.value = response.data
     })
-    playerSrc.value = serverUrl + response.data.filePath
+    playerSrc.value = videoSourceUrl + response.data.filePath
     //更新播放源
     player.source = {
       type: 'video',
-      sources: [{src: videoSourceUrl.value, type: 'video/mp4'}],
+      sources: [{src: playerSrc.value, type: 'video/mp4'}],
     };
   }).catch(() => {
     //出现意外时的弹窗
