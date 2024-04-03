@@ -161,6 +161,6 @@ app.provide("videoSourceUrl", "视频文件夹的绝对路径") //视频资源�
 
 ![image-20240403124444996](https://cdn.icesniper.love/typora/image-20240403124444996.png)
 
-挂历界面
+#### 管理界面
 
 ![image-20240403124505630](https://cdn.icesniper.love/typora/image-20240403124505630.png)
