@@ -38,7 +38,7 @@
         <el-input v-model="form.username" autocomplete="off"/>
       </el-form-item>
       <el-form-item label="密码" :label-width="formLabelWidth">
-        <el-input type="password" v-model="form.password"/>
+        <el-input type="password" v-model="form.password" :show-password="true"/>
       </el-form-item>
     </el-form>
     <el-form :model="form" v-show="!isLogin">
@@ -49,10 +49,10 @@
         <el-input v-model="form.email" autocomplete="off"/>
       </el-form-item>
       <el-form-item label="密码" :label-width="formLabelWidth">
-        <el-input type="password" v-model="form.password"/>
+        <el-input type="password" v-model="form.password"  :show-password="true"/>
       </el-form-item>
       <el-form-item label="确认密码" :label-width="formLabelWidth">
-        <el-input type="password" v-model="form.passwordTwice"/>
+        <el-input type="password" v-model="form.passwordTwice"  :show-password="true"/>
       </el-form-item>
       <el-form-item label="请上传头像" :label-width="formLabelWidth">
         <el-upload
