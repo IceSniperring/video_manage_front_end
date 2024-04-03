@@ -2,7 +2,7 @@
 
 > 写此项目的原因：我突发奇想，想要有一个类似于BilBili的视频网站，于是去网上找一些开源项目，但是我发现近几年来并没有类似的平台，所以就自己写了一个相关的平台（本人代码写的有点乱，后期有时间将代码重新整理）。<u>后端只能和视频资源放在同一台服务器上运行</u>。本项目采用vue+springboot+element ui+Plyr播发器
 
->本项目为前后端分离，此页面为前端，后端请前往[Ice的视频平台后端]([IceSniperring/video_manage_back_end (github.com)](https://github.com/IceSniperring/video_manage_back_end))查看
+>本项目为前后端分离，此页面为前端，后端请前往[Ice的视频平台后端](https://github.com/IceSniperring/video_manage_back_end)查看
 
 ### 一、项目部署
 
