@@ -91,7 +91,10 @@ onMounted(async () => {
 //选择页数时调用
 async function getData() {
 	let response = await axios.get(url, {
-		params: {}
+		params: {
+			title: route.query.keyword,
+			page: pagination.currentPage
+		}
 	})
 	videoInfoList.value = response.data.records
 }
