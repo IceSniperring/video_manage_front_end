@@ -7,12 +7,12 @@
         </el-col>
       </el-row>
       <el-row justify="end" style="margin-top: -60px">
-        <el-col :span="4">
+        <el-col :span="windowWidth<600?24:4">
           <h6>上传时间：{{ videoInfo.uploadDate }}</h6>
         </el-col>
       </el-row>
       <el-row justify="end" style="margin-top: -70px">
-        <el-col :span="4">
+        <el-col :span="windowWidth<600?24:4">
           <h6> 上传用户：{{ userInfo.username }}</h6>
         </el-col>
       </el-row>
