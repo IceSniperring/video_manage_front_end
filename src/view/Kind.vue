@@ -1,50 +1,50 @@
 <template>
-  <el-container>
-    <el-header>
-      <h3>
-        🗂️分类：
-        <span style="font-size: 22px" id="kind">{{ route.query.type }}</span>
-      </h3>
-      <h1>📖页数：{{ pagination.currentPage }}</h1>
-    </el-header>
-    <el-main>
-      <el-row :gutter="20">
-        <el-col style="" :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="(videoInfo,index) in videoInfoList"
-                :key="index">
-          <router-link :to="{
+	<el-container>
+		<el-header>
+			<h3>
+				🗂️分类：
+				<span style="font-size: 22px" id="kind">{{ route.query.type }}</span>
+			</h3>
+			<h1>📖页数：{{ pagination.currentPage }}</h1>
+		</el-header>
+		<el-main>
+			<el-row :gutter="20">
+				<el-col style="" :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="(videoInfo,index) in videoInfoList"
+				        :key="index">
+					<router-link :to="{
                 name:'player',
                 query:{
                   id:videoInfo.id
                 }
               }">
-            <el-card class="box-card">
-              <el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-                        style="height: 250px;width: 100%" v-loading="isLoading" @load="onLoaded"
-                        alt="加载失败" :fit="'cover'"/>
-              <p>{{ videoInfo.title }}</p>
-            </el-card>
-          </router-link>
-        </el-col>
-      </el-row>
-    </el-main>
-    <el-footer>
-      <el-row justify="center">
-        <el-col :span="8" :offset="3" style="justify-content: center;display: flex">
-          <el-pagination
-              v-model:current-page="pagination.currentPage"
-              :page-size="pagination.pageSize"
-              :small="pagination.small"
-              :disabled="pagination.disabled"
-              :background="pagination.background"
-              layout=" prev, pager, next, jumper"
-              :total="pagination.total"
-              @current-change="getData"
-          />
-        </el-col>
-      </el-row>
-    </el-footer>
-  </el-container>
-  <el-backtop :right="20" :bottom="20"/>
+						<el-card class="box-card">
+							<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
+							          style="width: 100%" v-loading="isLoading" @load="onLoaded"
+							          alt="加载失败" :fit="'cover'" :style="'height:'+windowHeight/4+'px'"/>
+							<p>{{ videoInfo.title }}</p>
+						</el-card>
+					</router-link>
+				</el-col>
+			</el-row>
+		</el-main>
+		<el-footer>
+			<el-row justify="center">
+				<el-col :span="8" :offset="3" style="justify-content: center;display: flex">
+					<el-pagination
+							v-model:current-page="pagination.currentPage"
+							:page-size="pagination.pageSize"
+							:small="pagination.small"
+							:disabled="pagination.disabled"
+							:background="pagination.background"
+							layout=" prev, pager, next, jumper"
+							:total="pagination.total"
+							@current-change="getData"
+					/>
+				</el-col>
+			</el-row>
+		</el-footer>
+	</el-container>
+	<el-backtop :right="20" :bottom="20"/>
 </template>
 
 <script setup>
@@ -58,105 +58,106 @@ const windowWidth = ref(document.body.clientWidth) //检测宽度变化
 const serverUrl = inject("serverUrl");
 let isLoading = ref(true)
 let onLoaded = () => {
-  isLoading.value = false
+	isLoading.value = false
 }
 //调用hooks获取必要数据
 const {videoInfoList, pageNum, total, fetchVideoData} = useVideoData(serverUrl);
 let pagination = reactive({
-  total: total,
-  currentPage: 1,
-  disabled: false,
-  pageSize: 20,
-  background: true,
-  small: false,
+	total: total,
+	currentPage: 1,
+	disabled: false,
+	pageSize: 20,
+	background: true,
+	small: false,
 })
 
 onBeforeMount(() => {
-  fetchVideoData(route.query.type, route.query.page);
+	fetchVideoData(route.query.type, route.query.page);
 });
-
+const windowHeight = ref(window.innerHeight)
 onMounted(() => {
-  document.getElementsByClassName("el-pagination__goto")[0].innerText = "跳至";
-  //窗口变化触发
-  window.addEventListener('resize', () => {
-    windowWidth.value = document.body.clientWidth
-  })
+	document.getElementsByClassName("el-pagination__goto")[0].innerText = "跳至";
+	//窗口变化触发
+	window.addEventListener('resize', () => {
+		windowWidth.value = document.body.clientWidth
+		windowHeight.value = window.innerHeight
+	})
 });
 
 function getData() {
-  router.push({
-    name: "kind",
-    query: {
-      type: route.query.type,
-      page: pagination.currentPage
-    }
-  });
-  fetchVideoData(route.query.type, pagination.currentPage);
+	router.push({
+		name: "kind",
+		query: {
+			type: route.query.type,
+			page: pagination.currentPage
+		}
+	});
+	fetchVideoData(route.query.type, pagination.currentPage);
 }
 
 onBeforeRouteUpdate((to, from, next) => {
-  //page大于给定页数，那么执行重定向
-  if (to.query.page > pageNum.value) {
-    next(false)
-    router.replace({
-      name: "kind",
-      query: {
-        kind: from.query.type,
-        page: from.query.page
-      }
-    })
-    //重新获取数据
-    pagination.currentPage = parseInt(from.query.page)
-    fetchVideoData(from.query.type, from.query.page);
-  } else {
-    pagination.currentPage = parseInt(to.query.page)
-    fetchVideoData(to.query.type, to.query.page);
-    next()
-  }
+	//page大于给定页数，那么执行重定向
+	if (to.query.page > pageNum.value) {
+		next(false)
+		router.replace({
+			name: "kind",
+			query: {
+				kind: from.query.type,
+				page: from.query.page
+			}
+		})
+		//重新获取数据
+		pagination.currentPage = parseInt(from.query.page)
+		fetchVideoData(from.query.type, from.query.page);
+	} else {
+		pagination.currentPage = parseInt(to.query.page)
+		fetchVideoData(to.query.type, to.query.page);
+		next()
+	}
 });
 </script>
 
 <style scoped>
 .el-col {
-  margin: 15px 0;
+	margin: 15px 0;
 }
 
 .el-image {
-  transition: .2s ease-in;
+	transition: .2s ease-in;
 }
 
 .el-image:hover {
-  filter: brightness(60%);
+	filter: brightness(60%);
 }
 
 .el-card {
-  border-radius: 5px;
-  --el-card-padding: 0px;
-  border-width: 0;
+	border-radius: 5px;
+	--el-card-padding: 0px;
+	border-width: 0;
 }
 
 .el-card:hover {
-  box-shadow: 2px 4px 6px;
+	box-shadow: 2px 4px 6px;
 }
 
 .box-card p {
-  font-size: 12px;
-  margin: 10px;
-  width: 94%;
-  overflow: hidden;
-  display: -webkit-box;
-  /*文字换行4次，此后省略*/
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  text-overflow: ellipsis;
-  word-wrap: break-word;
+	font-size: 12px;
+	margin: 10px;
+	width: 94%;
+	overflow: hidden;
+	display: -webkit-box;
+	/*文字换行4次，此后省略*/
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
 }
 
 a {
-  text-decoration: none;
+	text-decoration: none;
 }
 
 #kind {
-  color: #3eae7d;
+	color: #3eae7d;
 }
 </style>

@@ -22,7 +22,7 @@
               }">
 						<el-card class="box-card">
 							<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-							          style="height: 250px;width: 100%"
+							          style="width: 100%" :style="'height:'+windowHeight/4+'px'"
 							          alt="加载失败" :fit="'cover'" v-loading="isLoading" @load="onLoaded"/>
 							<p>{{ videoInfo.title }}</p>
 						</el-card>
@@ -71,11 +71,13 @@ let onLoaded = () => {
 	isLoading.value = false
 }
 const windowWidth = ref(document.body.clientWidth)
+const windowHeight = ref(window.innerHeight)
 onMounted(async () => {
 	document.getElementsByClassName("el-pagination__goto")[0].innerText = "跳至";
 	//窗口变化触发
 	window.addEventListener('resize', () => {
 		windowWidth.value = document.body.clientWidth
+		windowHeight.value = window.innerHeight
 	})
 	let response = await axios.get(url, {
 		params: {
