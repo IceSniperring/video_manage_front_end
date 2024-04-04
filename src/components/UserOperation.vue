@@ -13,6 +13,10 @@
         <p class="userMenu"
            @click="logout">
           🧑‍💻注销</p>
+	      <p class="userMenu"
+	         @click="History">
+		      🔄历史记录
+	      </p>
         <p class="userMenu"
            @click="videoManage">
           📄管理稿件
@@ -343,6 +347,12 @@ async function submit() {
       }
     }
   }
+}
+
+function History(){
+	router.push({
+		name: "history"
+	})
 }
 </script>
 

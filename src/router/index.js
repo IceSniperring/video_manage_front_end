@@ -7,6 +7,7 @@ import Kind from "@/view/Kind.vue";
 import VideoManage from "@/view/VideoManage.vue";
 import Page404 from '@/view/404.vue'
 import ErrorPage from "@/view/ErrorPage.vue";
+import History from "@/view/History.vue";
 
 export const router = createRouter({
     history: createWebHashHistory(),
@@ -44,6 +45,11 @@ export const router = createRouter({
             name: "videoManage",
             path: "/videoManage",
             component: VideoManage
+        },
+        {
+            name: "history",
+            path: "/history",
+            component: History
         },
         {
             name: "error",
