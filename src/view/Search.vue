@@ -22,8 +22,8 @@
               }">
 						<el-card class="box-card">
 							<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-							          style="width: 100%"
-							          alt="加载失败" :fit="'contain'" v-loading="isLoading" @load="onLoaded"/>
+							          style="height: 250px;width: 100%"
+							          alt="加载失败" :fit="'cover'" v-loading="isLoading" @load="onLoaded"/>
 							<p>{{ videoInfo.title }}</p>
 						</el-card>
 					</router-link>

@@ -232,7 +232,10 @@ onBeforeRouteLeave((to, from, next) => {
 </script>
 <style scoped>
 #play-box {
+	width: 100%;
 	box-shadow: 0 0 10px;
+	border-radius: 6px;
+	overflow: hidden;
 }
 
 .el-col {
