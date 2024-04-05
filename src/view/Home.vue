@@ -6,8 +6,8 @@
 		<el-main>
 			<el-row id="carousel">
 				<el-col :span="24" v-if="windowWidth>=1000">
-					<el-carousel motion-blur height="350px" type="card">
-						<el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id" :label="postInfo.title">
+					<el-carousel :style="'height:'+windowHeight/2+'px'" type="card">
+						<el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id" :label="postInfo.title" :style="'height:'+windowHeight/2+'px'">
 							<router-link :to="{
 								 name:'player',
                  query: {
@@ -15,7 +15,7 @@
                 }
 							}">
 								<el-image :src="`${inject('videoSourceUrl')}${postInfo.postPath}`"
-								          alt="加载失败" style="width: 100%" :fit="'cover'"/>
+								          alt="加载失败" style="width: 100%"  :style="'height:'+windowHeight/2+'px'" :fit="'cover'"/>
 							</router-link>
 						</el-carousel-item>
 					</el-carousel>

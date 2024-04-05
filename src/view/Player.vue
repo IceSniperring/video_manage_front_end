@@ -41,7 +41,8 @@
               }">
 						<el-card class="box-card">
 							<el-image :src="`${inject('videoSourceUrl')}${randomVideoInfo.postPath}`"
-							          alt="加载失败" :fit="'scale-down'"/>
+							          alt="加载失败" :fit="'cover'"
+							          style="width: 100%" :style="'height:'+windowHeight/4+'px'"/>
 							<p style="margin-left: 5px" id="el-card-title">{{ randomVideoInfo.title }}</p>
 						</el-card>
 					</router-link>
@@ -89,15 +90,15 @@ const playerOption = {
 		'play',
 		//'fast-forward',
 		'progress',
-		//'current-time',
-		//'duration',
+		'current-time',
+		'duration',
 		'mute',
 		'volume',
 		'captions',
 		'settings',
 		'pip',
 		'airplay',
-		'download',
+		//'download',
 		'fullscreen',
 	],
 	tooltips: {
@@ -150,6 +151,7 @@ const playerOption = {
 }
 
 const windowWidth = ref(document.body.clientWidth)
+const windowHeight = ref(window.innerHeight)
 onBeforeMount(async () => {
 	await axios.get(videoUrl, {params: {id: route.query.id}}).then((response) => {
 		videoInfo.value = response.data
@@ -176,6 +178,7 @@ onMounted(() => {
 	//窗口变化触发
 	window.addEventListener('resize', () => {
 		windowWidth.value = document.body.clientWidth
+		windowHeight.value = window.innerHeight
 	})
 	const localUserInfo = JSON.parse(localStorage.getItem("userInfo"))
 	if (localUserInfo !== null) {
@@ -253,7 +256,6 @@ onBeforeRouteLeave((to, from, next) => {
 .el-card {
 	border-radius: 5px;
 	--el-card-padding: 0px;
-	border-width: 0;
 }
 
 .el-card:hover {
@@ -274,7 +276,7 @@ onBeforeRouteLeave((to, from, next) => {
 }
 
 #el-card-title {
-	font-size: 50%;
+	font-size: 12px;
 }
 
 a {
