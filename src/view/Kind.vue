@@ -1,50 +1,52 @@
 <template>
-	<el-container>
-		<el-header>
-			<h3>
-				🗂️分类：
-				<span style="font-size: 22px" id="kind">{{ route.query.type }}</span>
-			</h3>
-			<h1>📖页数：{{ pagination.currentPage }}</h1>
-		</el-header>
-		<el-main>
-			<el-row :gutter="20">
-				<el-col style="" :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="(videoInfo,index) in videoInfoList"
-				        :key="index">
-					<router-link :to="{
+	<div>
+		<el-container>
+			<el-header>
+				<h3>
+					🗂️分类：
+					<span style="font-size: 22px" id="kind">{{ route.query.type }}</span>
+				</h3>
+				<h1>📖页数：{{ pagination.currentPage }}</h1>
+			</el-header>
+			<el-main>
+				<el-row :gutter="20">
+					<el-col style="" :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="(videoInfo,index) in videoInfoList"
+					        :key="index">
+						<router-link :to="{
                 name:'player',
                 query:{
                   id:videoInfo.id
                 }
               }">
-						<el-card class="box-card">
-							<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-							          style="width: 100%" v-loading="isLoading" @load="onLoaded"
-							          alt="加载失败" :fit="'cover'" :style="'height:'+windowHeight/4+'px'"/>
-							<p>{{ videoInfo.title }}</p>
-						</el-card>
-					</router-link>
-				</el-col>
-			</el-row>
-		</el-main>
-		<el-footer>
-			<el-row justify="center">
-				<el-col :span="8" :offset="3" style="justify-content: center;display: flex">
-					<el-pagination
-							v-model:current-page="pagination.currentPage"
-							:page-size="pagination.pageSize"
-							:small="pagination.small"
-							:disabled="pagination.disabled"
-							:background="pagination.background"
-							layout=" prev, pager, next, jumper"
-							:total="pagination.total"
-							@current-change="getData"
-					/>
-				</el-col>
-			</el-row>
-		</el-footer>
-	</el-container>
-	<el-backtop :right="20" :bottom="20"/>
+							<el-card class="box-card">
+								<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
+								          style="width: 100%" v-loading="isLoading" @load="onLoaded"
+								          alt="加载失败" :fit="'cover'" :style="'height:'+windowHeight/4+'px'"/>
+								<p>{{ videoInfo.title }}</p>
+							</el-card>
+						</router-link>
+					</el-col>
+				</el-row>
+			</el-main>
+			<el-footer>
+				<el-row justify="center">
+					<el-col :span="8" :offset="3" style="justify-content: center;display: flex">
+						<el-pagination
+								v-model:current-page="pagination.currentPage"
+								:page-size="pagination.pageSize"
+								:small="pagination.small"
+								:disabled="pagination.disabled"
+								:background="pagination.background"
+								layout=" prev, pager, next, jumper"
+								:total="pagination.total"
+								@current-change="getData"
+						/>
+					</el-col>
+				</el-row>
+			</el-footer>
+		</el-container>
+		<el-backtop :right="20" :bottom="20"/>
+	</div>
 </template>
 
 <script setup>

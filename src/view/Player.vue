@@ -1,55 +1,57 @@
 <template>
-	<el-container>
-		<el-main>
-			<el-row>
-				<el-col>
-					<h4>{{ videoInfo.title }}</h4>
-				</el-col>
-			</el-row>
-			<el-row justify="end" style="margin-top: -60px">
-				<el-col :span="windowWidth<600?24:4">
-					<h6>上传时间：{{ videoInfo.uploadDate }}</h6>
-				</el-col>
-			</el-row>
-			<el-row justify="end" style="margin-top: -70px">
-				<el-col :span="windowWidth<600?24:4">
-					<h6> 上传用户：{{ userInfo.username }}</h6>
-				</el-col>
-			</el-row>
-			<el-row :gutter="20" style="margin-top: -30px">
-				<el-col :span="24">
-					<div id="play-box">
-						<video id="player" class="player"
-						       playsinline
-						       controls :data-poster="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-						       style="--plyr-color-main: #3eae7d;--plyr-video-control-color-hover:#000000">
-							<source :src="playerSrc" type="video/mp4"/>
-						</video>
-					</div>
-				</el-col>
-			</el-row>
-			<el-row>
-				<h4>🎉为你推荐</h4>
-			</el-row>
-			<el-row :gutter="20">
-				<el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="randomVideoInfo in random4Video">
-					<router-link :to="{
+	<div>
+		<el-container>
+			<el-main>
+				<el-row>
+					<el-col>
+						<h4>{{ videoInfo.title }}</h4>
+					</el-col>
+				</el-row>
+				<el-row justify="end" style="margin-top: -60px">
+					<el-col :span="windowWidth<600?24:4">
+						<h6>上传时间：{{ videoInfo.uploadDate }}</h6>
+					</el-col>
+				</el-row>
+				<el-row justify="end" style="margin-top: -70px">
+					<el-col :span="windowWidth<600?24:4">
+						<h6> 上传用户：{{ userInfo.username }}</h6>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20" style="margin-top: -30px">
+					<el-col :span="24">
+						<div id="play-box">
+							<video id="player" class="player"
+							       playsinline
+							       controls :data-poster="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
+							       style="--plyr-color-main: #3eae7d;--plyr-video-control-color-hover:#000000">
+								<source :src="playerSrc" type="video/mp4"/>
+							</video>
+						</div>
+					</el-col>
+				</el-row>
+				<el-row>
+					<h4>🎉为你推荐</h4>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)" v-for="randomVideoInfo in random4Video">
+						<router-link :to="{
                 name:'player',
                 query:{
                   id: randomVideoInfo.id
                 }
               }">
-						<el-card class="box-card">
-							<el-image :src="`${inject('videoSourceUrl')}${randomVideoInfo.postPath}`"
-							          alt="加载失败" :fit="'cover'"
-							          style="width: 100%" :style="'height:'+windowHeight/4+'px'"/>
-							<p style="margin-left: 5px" id="el-card-title">{{ randomVideoInfo.title }}</p>
-						</el-card>
-					</router-link>
-				</el-col>
-			</el-row>
-		</el-main>
-	</el-container>
+							<el-card class="box-card">
+								<el-image :src="`${inject('videoSourceUrl')}${randomVideoInfo.postPath}`"
+								          alt="加载失败" :fit="'cover'"
+								          style="width: 100%" :style="'height:'+windowHeight/4+'px'"/>
+								<p style="margin-left: 5px" id="el-card-title">{{ randomVideoInfo.title }}</p>
+							</el-card>
+						</router-link>
+					</el-col>
+				</el-row>
+			</el-main>
+		</el-container>
+	</div>
 </template>
 <script setup>
 import {onBeforeRouteLeave, onBeforeRouteUpdate, useRoute} from "vue-router";

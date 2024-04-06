@@ -1,78 +1,80 @@
 <template>
-  <el-container>
-    <el-main>
-      <el-row :gutter="20" align="middle" justify="center" style="margin-bottom: 10px">
-        <el-col :span="15">
-          <el-progress
-              type="line"
-              :percentage="percentCompleted"
-              :stroke-width="20"
-              :text-inside="true"
-              v-if="percentCompleted!=0"
-              :status="percentCompleted==100?'success':'exception'">
-          </el-progress>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" align="middle" justify="center">
-        <el-col :span="15">
-          <el-upload
-              drag
-              multiple
-              name="video"
-              :auto-upload="false"
-              ref="videoUpload"
-              :on-change="onVideoChange"
-              accept="video/*"
-              :on-remove="onRemoveVideo"
-              :disabled="isLogged">
-            <el-icon class="el-icon--upload">
-              <upload-filled/>
-            </el-icon>
-            <div class="el-upload__text">
-              <em>点击上传</em> 或者<em> 将文件拖拽到此</em>
-            </div>
-            <template #tip>
-              <div class="el-upload__tip">
-                <h3>视频格式 < 1GB（一次只能上传一个）</h3>
-              </div>
-            </template>
-          </el-upload>
-        </el-col>
-      </el-row>
+  <div>
+	  <el-container>
+		  <el-main>
+			  <el-row :gutter="20" align="middle" justify="center" style="margin-bottom: 10px">
+				  <el-col :span="15">
+					  <el-progress
+							  type="line"
+							  :percentage="percentCompleted"
+							  :stroke-width="20"
+							  :text-inside="true"
+							  v-if="percentCompleted!=0"
+							  :status="percentCompleted==100?'success':'exception'">
+					  </el-progress>
+				  </el-col>
+			  </el-row>
+			  <el-row :gutter="20" align="middle" justify="center">
+				  <el-col :span="15">
+					  <el-upload
+							  drag
+							  multiple
+							  name="video"
+							  :auto-upload="false"
+							  ref="videoUpload"
+							  :on-change="onVideoChange"
+							  accept="video/*"
+							  :on-remove="onRemoveVideo"
+							  :disabled="isLogged">
+						  <el-icon class="el-icon--upload">
+							  <upload-filled/>
+						  </el-icon>
+						  <div class="el-upload__text">
+							  <em>点击上传</em> 或者<em> 将文件拖拽到此</em>
+						  </div>
+						  <template #tip>
+							  <div class="el-upload__tip">
+								  <h3>视频格式 < 1GB（一次只能上传一个）</h3>
+							  </div>
+						  </template>
+					  </el-upload>
+				  </el-col>
+			  </el-row>
 
-      <el-row :gutter="20" align="middle" justify="center">
-        <el-col :span="15">
-          <el-row justify="space-between">
-            <el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)">
-              <el-form>
-                <el-form-item>
-                  <label>请上传封面：</label>
-                  <PostUpload/>
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)">
-              <el-form>
-                <el-form-item>
-                  <label>请输入你的分类：</label>
-                  <el-input v-model="kind" :disabled="isLogged"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <label>请输入视频标题：</label>
-                  <el-input v-model="title" :disabled="isLogged"></el-input>
-                </el-form-item>
-                <el-button type="primary" style="width: 100%"
-                           @click="submitForm" :disabled="isLogged">提交
-                </el-button>
-              </el-form>
-            </el-col>
-            <el-col>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-    </el-main>
-  </el-container>
+			  <el-row :gutter="20" align="middle" justify="center">
+				  <el-col :span="15">
+					  <el-row justify="space-between">
+						  <el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)">
+							  <el-form>
+								  <el-form-item>
+									  <label>请上传封面：</label>
+									  <PostUpload/>
+								  </el-form-item>
+							  </el-form>
+						  </el-col>
+						  <el-col :span="windowWidth<600?24:(windowWidth<1200?12:6)">
+							  <el-form>
+								  <el-form-item>
+									  <label>请输入你的分类：</label>
+									  <el-input v-model="kind" :disabled="isLogged"></el-input>
+								  </el-form-item>
+								  <el-form-item>
+									  <label>请输入视频标题：</label>
+									  <el-input v-model="title" :disabled="isLogged"></el-input>
+								  </el-form-item>
+								  <el-button type="primary" style="width: 100%"
+								             @click="submitForm" :disabled="isLogged">提交
+								  </el-button>
+							  </el-form>
+						  </el-col>
+						  <el-col>
+						  </el-col>
+					  </el-row>
+				  </el-col>
+			  </el-row>
+		  </el-main>
+	  </el-container>
+  </div>
 </template>
 
 <script setup lang="ts">

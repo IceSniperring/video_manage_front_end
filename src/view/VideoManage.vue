@@ -1,76 +1,78 @@
 <template>
-  <el-container>
-    <el-main>
-      <el-row>
-        <el-col :span="16">
-          <h1>{{ userInfo.username }}的稿件：</h1>
-        </el-col>
-        <el-col :span="2">
-          <el-button type="danger" v-show="idArray.length!==0"
-                     @click="deleteVideos">
-            批量删除
-          </el-button>
-        </el-col>
-        <el-col :span="6">
-          <el-input v-model="tableSearch" placeholder="搜索视频"/>
-        </el-col>
-      </el-row>
+  <div>
+	  <el-container>
+		  <el-main>
+			  <el-row>
+				  <el-col :span="16">
+					  <h1>{{ userInfo.username }}的稿件：</h1>
+				  </el-col>
+				  <el-col :span="2">
+					  <el-button type="danger" v-show="idArray.length!==0"
+					             @click="deleteVideos">
+						  批量删除
+					  </el-button>
+				  </el-col>
+				  <el-col :span="6">
+					  <el-input v-model="tableSearch" placeholder="搜索视频"/>
+				  </el-col>
+			  </el-row>
 
-      <el-table
-          :data="filterVideoInfo"
-          style="width: 100%"
-          row-key="id"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-          v-loading="loading"
-          @selection-change="handelSelectionChange" stripe>
-        <el-table-column type="selection" width="55"/>
-        <el-table-column prop="title" label="视频名称"/>
-        <el-table-column label="封面">
-          <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <el-image :src="`${inject('videoSourceUrl')}${scope.row.postPath}`"
-                        :preview-src-list="[`${inject('videoSourceUrl')}${scope.row.postPath}`]"
-                        :initial-index="4" style="width: 100px;border-radius: 2px" preview-teleported/>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="uploadDate" label="上传时间"/>
-        <el-table-column label="分类" prop="kind"/>
-        <el-table-column fixed="right" width="150" label="操作">
-          <template #default="scope">
-            <el-button link type="primary" size="default"
-                       @click="openEditPanel(scope.row)">
-              编辑
-            </el-button>
-            <el-button link type="primary" size="default"
-                       @click="deleteVideo(scope.row.id)">
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-dialog v-model="editVideoInfo"
-                 title="编辑此视频"
-                 width="500" style="border-radius: 10px"
-                 :lock-scroll="false"><!--解除禁用滚动条，防止闪屏-->
-        <el-form :model="form">
-          <el-form-item label="标题" :label-width="formLabelWidth">
-            <el-input v-model="form.title" autocomplete="off"/>
-          </el-form-item>
-          <el-form-item label="请上传封面" :label-width="formLabelWidth">
-            <PostUpload/>
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button type="primary" @click="editSubmit()">
-              确认
-            </el-button>
-          </div>
-        </template>
-      </el-dialog>
-    </el-main>
-  </el-container>
+			  <el-table
+					  :data="filterVideoInfo"
+					  style="width: 100%"
+					  row-key="id"
+					  :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+					  v-loading="loading"
+					  @selection-change="handelSelectionChange" stripe>
+				  <el-table-column type="selection" width="55"/>
+				  <el-table-column prop="title" label="视频名称"/>
+				  <el-table-column label="封面">
+					  <template #default="scope">
+						  <div style="display: flex; align-items: center">
+							  <el-image :src="`${inject('videoSourceUrl')}${scope.row.postPath}`"
+							            :preview-src-list="[`${inject('videoSourceUrl')}${scope.row.postPath}`]"
+							            :initial-index="4" style="width: 100px;border-radius: 2px" preview-teleported/>
+						  </div>
+					  </template>
+				  </el-table-column>
+				  <el-table-column prop="uploadDate" label="上传时间"/>
+				  <el-table-column label="分类" prop="kind"/>
+				  <el-table-column fixed="right" width="150" label="操作">
+					  <template #default="scope">
+						  <el-button link type="primary" size="default"
+						             @click="openEditPanel(scope.row)">
+							  编辑
+						  </el-button>
+						  <el-button link type="primary" size="default"
+						             @click="deleteVideo(scope.row.id)">
+							  删除
+						  </el-button>
+					  </template>
+				  </el-table-column>
+			  </el-table>
+			  <el-dialog v-model="editVideoInfo"
+			             title="编辑此视频"
+			             width="500" style="border-radius: 10px"
+			             :lock-scroll="false"><!--解除禁用滚动条，防止闪屏-->
+				  <el-form :model="form">
+					  <el-form-item label="标题" :label-width="formLabelWidth">
+						  <el-input v-model="form.title" autocomplete="off"/>
+					  </el-form-item>
+					  <el-form-item label="请上传封面" :label-width="formLabelWidth">
+						  <PostUpload/>
+					  </el-form-item>
+				  </el-form>
+				  <template #footer>
+					  <div class="dialog-footer">
+						  <el-button type="primary" @click="editSubmit()">
+							  确认
+						  </el-button>
+					  </div>
+				  </template>
+			  </el-dialog>
+		  </el-main>
+	  </el-container>
+  </div>
 </template>
 
 <script setup>

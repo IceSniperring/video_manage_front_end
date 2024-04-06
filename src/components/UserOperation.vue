@@ -8,7 +8,7 @@
     <el-row>
       <el-col :span="24" :offset="4">
         <p class="userMenu" id="nickname" style="font-weight: 800">
-          ☺️{{ nickname }}
+          用户名：{{ nickname }}
         </p>
         <p class="userMenu"
            @click="logout">

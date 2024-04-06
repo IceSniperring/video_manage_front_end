@@ -11,7 +11,10 @@
 				<Navbar/>
 			</el-header>
 			<el-main>
-				<router-view>
+				<router-view v-slot="{Component}">
+					<transition name="el-fade-in-linear">
+						<component :is="Component" />
+					</transition>
 				</router-view>
 			</el-main>
 		</el-container>
@@ -23,6 +26,7 @@ import Navbar from "@/components/Navbar.vue";
 import Header from "@/components/Header.vue";
 import {onMounted, ref} from "vue";
 import AsideMenu from "@/components/AsideMenu.vue";
+import 'animate.css'
 
 const windowWidth = ref(document.body.clientWidth)
 onMounted(() => {

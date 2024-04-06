@@ -1,58 +1,60 @@
 <template>
-	<el-container>
-		<el-main>
-			<el-row>
-				<el-col :span="16">
-					<h1>历史记录</h1>
-				</el-col>
-				<el-col :span="2">
-					<el-button type="danger" v-show="idArray.length!==0"
-					           @click="deleteRecords">
-						批量删除
-					</el-button>
-				</el-col>
-				<el-col :span="6">
-					<el-input v-model="tableSearch" placeholder="搜索视频"/>
-				</el-col>
-			</el-row>
+	<div>
+		<el-container>
+			<el-main>
+				<el-row>
+					<el-col :span="16">
+						<h1>历史记录</h1>
+					</el-col>
+					<el-col :span="2">
+						<el-button type="danger" v-show="idArray.length!==0"
+						           @click="deleteRecords">
+							批量删除
+						</el-button>
+					</el-col>
+					<el-col :span="6">
+						<el-input v-model="tableSearch" placeholder="搜索视频"/>
+					</el-col>
+				</el-row>
 
-			<el-table
-					:data="filterHistoryTable"
-					style="width: 100%"
-					row-key="id"
-					:tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-					v-loading="loading"
-					@selection-change="handelSelectionChange" stripe>
-				<el-table-column type="selection" width="55"/>
-				<el-table-column prop="title" label="视频名称"/>
-				<el-table-column label="封面">
-					<template #default="scope">
-						<div style="display: flex; align-items: center">
-							<router-link :to="{
+				<el-table
+						:data="filterHistoryTable"
+						style="width: 100%"
+						row-key="id"
+						:tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+						v-loading="loading"
+						@selection-change="handelSelectionChange" stripe>
+					<el-table-column type="selection" width="55"/>
+					<el-table-column prop="title" label="视频名称"/>
+					<el-table-column label="封面">
+						<template #default="scope">
+							<div style="display: flex; align-items: center">
+								<router-link :to="{
 									name:'player',
 									query:{
 										id:scope.row.videoId
 									}
 							}">
-								<el-image :src="`${inject('videoSourceUrl')}${scope.row.postPath}`"
-								          :initial-index="4" style="width: 100px;border-radius: 2px" preview-teleported/>
-							</router-link>
-						</div>
-					</template>
-				</el-table-column>
-				<el-table-column prop="viewDate" label="观看时间"/>
-				<el-table-column label="分类" prop="kind"/>
-				<el-table-column fixed="right" width="150" label="操作">
-					<template #default="scope">
-						<el-button link type="primary" size="default"
-						           @click="deleteRecord(scope.row.recordId)">
-							删除
-						</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-		</el-main>
-	</el-container>
+									<el-image :src="`${inject('videoSourceUrl')}${scope.row.postPath}`"
+									          :initial-index="4" style="width: 100px;border-radius: 2px" preview-teleported/>
+								</router-link>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column prop="viewDate" label="观看时间"/>
+					<el-table-column label="分类" prop="kind"/>
+					<el-table-column fixed="right" width="150" label="操作">
+						<template #default="scope">
+							<el-button link type="primary" size="default"
+							           @click="deleteRecord(scope.row.recordId)">
+								删除
+							</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-main>
+		</el-container>
+	</div>
 </template>
 
 <script setup>

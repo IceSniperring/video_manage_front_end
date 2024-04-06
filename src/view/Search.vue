@@ -1,52 +1,54 @@
 <template>
-	<el-container>
-		<el-header>
-			<h3>
-				搜索<span id="keyword">{{ route.query.keyword }}</span>
-			</h3>
-			<h1>页数：{{ pagination.currentPage }}</h1>
-		</el-header>
-		<el-main>
-			<el-row :gutter="20">
-				<el-col v-if="videoInfoList.length===0" :span="windowWidth<600?24:(windowWidth<1200?12:6)">
-					<h2>尚未搜索到内容</h2>
-				</el-col>
-				<el-col v-else  :span="windowWidth<600?24:(windowWidth<1200?12:6)"
-				        v-for="(videoInfo,index) in videoInfoList"
-				        :key="index">
-					<router-link :to="{
+	<div>
+		<el-container>
+			<el-header>
+				<h3>
+					搜索<span id="keyword">{{ route.query.keyword }}</span>
+				</h3>
+				<h1>页数：{{ pagination.currentPage }}</h1>
+			</el-header>
+			<el-main>
+				<el-row :gutter="20">
+					<el-col v-if="videoInfoList.length===0" :span="windowWidth<600?24:(windowWidth<1200?12:6)">
+						<h2>尚未搜索到内容</h2>
+					</el-col>
+					<el-col v-else  :span="windowWidth<600?24:(windowWidth<1200?12:6)"
+					        v-for="(videoInfo,index) in videoInfoList"
+					        :key="index">
+						<router-link :to="{
                 name:'player',
                 query:{
                   id:videoInfo.id
                 }
               }">
-						<el-card class="box-card">
-							<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-							          style="width: 100%" :style="'height:'+windowHeight/4+'px'"
-							          alt="加载失败" :fit="'cover'" v-loading="isLoading" @load="onLoaded"/>
-							<p>{{ videoInfo.title }}</p>
-						</el-card>
-					</router-link>
-				</el-col>
-			</el-row>
-		</el-main>
-		<el-footer>
-			<el-row justify="center" align="middle">
-				<el-col :span="6">
-					<el-pagination
-							v-model:current-page="pagination.currentPage"
-							:page-size="pagination.pageSize"
-							:small="pagination.small"
-							:disabled="pagination.disabled"
-							:background="pagination.background"
-							layout=" prev, pager, next, jumper"
-							:total="pagination.total"
-							@current-change="getData"
-					/>
-				</el-col>
-			</el-row>
-		</el-footer>
-	</el-container>
+							<el-card class="box-card">
+								<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
+								          style="width: 100%" :style="'height:'+windowHeight/4+'px'"
+								          alt="加载失败" :fit="'cover'" v-loading="isLoading" @load="onLoaded"/>
+								<p>{{ videoInfo.title }}</p>
+							</el-card>
+						</router-link>
+					</el-col>
+				</el-row>
+			</el-main>
+			<el-footer>
+				<el-row justify="center" align="middle">
+					<el-col :span="6">
+						<el-pagination
+								v-model:current-page="pagination.currentPage"
+								:page-size="pagination.pageSize"
+								:small="pagination.small"
+								:disabled="pagination.disabled"
+								:background="pagination.background"
+								layout=" prev, pager, next, jumper"
+								:total="pagination.total"
+								@current-change="getData"
+						/>
+					</el-col>
+				</el-row>
+			</el-footer>
+		</el-container>
+	</div>
 </template>
 <script setup>
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";

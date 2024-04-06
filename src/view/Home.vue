@@ -1,47 +1,49 @@
 <template>
-	<el-container>
-		<el-header>
-			<h1>🏡主页</h1>
-		</el-header>
-		<el-main>
-			<el-row id="carousel">
-				<el-col :span="24" v-if="windowWidth>=1000">
-					<el-carousel :style="'height:'+windowHeight/2+'px'" type="card">
-						<el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id" :label="postInfo.title" :style="'height:'+windowHeight/2+'px'">
-							<router-link :to="{
+	<div>
+		<el-container>
+			<el-header>
+				<h1>🏡主页</h1>
+			</el-header>
+			<el-main>
+				<el-row id="carousel">
+					<el-col :span="24" v-if="windowWidth>=1000">
+						<el-carousel :style="'height:'+windowHeight/2+'px'" type="card">
+							<el-carousel-item v-for="postInfo in postInfoList" :key="postInfo.id" :label="postInfo.title" :style="'height:'+windowHeight/2+'px'">
+								<router-link :to="{
 								 name:'player',
                  query: {
                     id:postInfo.id
                 }
 							}">
-								<el-image :src="`${inject('videoSourceUrl')}${postInfo.postPath}`"
-								          alt="加载失败" style="width: 100%"  :style="'height:'+windowHeight/2+'px'" :fit="'cover'"/>
-							</router-link>
-						</el-carousel-item>
-					</el-carousel>
-				</el-col>
-			</el-row>
-			<el-row :gutter="20">
-				<el-col v-for="videoInfo in videoInfoList" :span="windowWidth<600?24:(windowWidth<1200?12:6)"
-				        :key="videoInfo.id">
-					<router-link :to="{
+									<el-image :src="`${inject('videoSourceUrl')}${postInfo.postPath}`"
+									          alt="加载失败" style="width: 100%"  :style="'height:'+windowHeight/2+'px'" :fit="'cover'"/>
+								</router-link>
+							</el-carousel-item>
+						</el-carousel>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col v-for="videoInfo in videoInfoList" :span="windowWidth<600?24:(windowWidth<1200?12:6)"
+					        :key="videoInfo.id">
+						<router-link :to="{
 								 name:'player',
                  query: {
                     id:videoInfo.id
                 }
 							}">
-						<el-card class="box-card">
-							<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
-							          alt="加载失败" :fit="'cover'" v-loading="isLoading"
-							          @load="onLoaded" style="width: 100%" :style="'height:'+windowHeight/4+'px'"/>
-							<p style="margin-left: 5px">{{ videoInfo.title }}</p>
-						</el-card>
-					</router-link>
-				</el-col>
-			</el-row>
-		</el-main>
-	</el-container>
-	<el-backtop :right="20" :bottom="20"/>
+							<el-card class="box-card">
+								<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
+								          alt="加载失败" :fit="'cover'" v-loading="isLoading"
+								          @load="onLoaded" style="width: 100%" :style="'height:'+windowHeight/4+'px'"/>
+								<p style="margin-left: 5px">{{ videoInfo.title }}</p>
+							</el-card>
+						</router-link>
+					</el-col>
+				</el-row>
+			</el-main>
+		</el-container>
+		<el-backtop :right="20" :bottom="20"/>
+	</div>
 </template>
 
 <script setup>
