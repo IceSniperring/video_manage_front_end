@@ -12,7 +12,7 @@
 					<el-col v-if="videoInfoList.length===0" :span="windowWidth<600?24:(windowWidth<1200?12:6)">
 						<h2>尚未搜索到内容</h2>
 					</el-col>
-					<el-col v-else  :span="windowWidth<600?24:(windowWidth<1200?12:6)"
+					<el-col v-else :span="windowWidth<600?24:(windowWidth<1200?12:6)"
 					        v-for="(videoInfo,index) in videoInfoList"
 					        :key="index">
 						<router-link :to="{
@@ -24,8 +24,16 @@
 							<el-card class="box-card">
 								<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
 								          style="width: 100%" :style="'height:'+windowHeight/4+'px'"
-								          alt="加载失败" :fit="'cover'" v-loading="isLoading" @load="onLoaded"/>
-								<p>{{ videoInfo.title }}</p>
+								          alt="加载失败" :fit="'cover'" v-loading="isLoading" @load="onLoaded"
+								          @mouseenter="videoInfo.isHover=true" @mouseleave="videoInfo.isHover=false"/>
+								<p style="margin-left: 5px">{{ videoInfo.title }}</p>
+								<transition name="el-fade-in-linear">
+									<div class="img-info" v-show="videoInfo.isHover">
+										<p style="font-size: 16px;margin-bottom: 20px">{{ videoInfo.title }}</p>
+										<p>视频id：{{ videoInfo.id }}</p>
+										<p>上传时间：{{ videoInfo.uploadDate }}</p>
+									</div>
+								</transition>
 							</el-card>
 						</router-link>
 					</el-col>
@@ -87,7 +95,15 @@ onMounted(async () => {
 			page: route.query.page
 		}
 	})
-	videoInfoList.value = response.data.records
+	let videoInfo = response.data.records
+	videoInfoList.value = videoInfo.map(function (video) {
+		return Object.defineProperty(video, "isHover", {
+			value: false,
+			writable: true,
+			enumerable: true,
+			configurable: true
+		});
+	})
 	pagination.total = response.data.total
 	pageNum.value = response.data.pages
 })
@@ -105,7 +121,7 @@ async function getData() {
 
 
 onBeforeRouteUpdate(async (to, from, next) => {
-	if(to.query.keyword===from.query.keyword){
+	if (to.query.keyword === from.query.keyword) {
 		//用户手动修改url调用
 		//page大于给定页数，那么执行重定向
 		if (to.query.page > pageNum.value) {
@@ -124,7 +140,15 @@ onBeforeRouteUpdate(async (to, from, next) => {
 					page: from.query.page
 				}
 			})
-			videoInfoList.value = response.data.records
+			let videoInfo = response.data.records
+			videoInfoList.value = videoInfo.map(function (video) {
+				return Object.defineProperty(video, "isHover", {
+					value: false,
+					writable: true,
+					enumerable: true,
+					configurable: true
+				});
+			})
 		} else {
 			pagination.currentPage = parseInt(to.query.page)
 			let response = await axios.get(url, {
@@ -133,17 +157,33 @@ onBeforeRouteUpdate(async (to, from, next) => {
 					page: to.query.page
 				}
 			})
-			videoInfoList.value = response.data.records
+			let videoInfo = response.data.records
+			videoInfoList.value = videoInfo.map(function (video) {
+				return Object.defineProperty(video, "isHover", {
+					value: false,
+					writable: true,
+					enumerable: true,
+					configurable: true
+				});
+			})
 			next()
 		}
-	}else{
+	} else {
 		let response = await axios.get(url, {
 			params: {
 				title: to.query.keyword,
 				page: to.query.page
 			}
 		})
-		videoInfoList.value = response.data.records
+		let videoInfo = response.data.records
+		videoInfoList.value = videoInfo.map(function (video) {
+			return Object.defineProperty(video, "isHover", {
+				value: false,
+				writable: true,
+				enumerable: true,
+				configurable: true
+			});
+		})
 		pagination.total = response.data.total
 		pageNum.value = response.data.pages
 		next()
@@ -172,6 +212,7 @@ onBeforeRouteUpdate(async (to, from, next) => {
 	border-radius: 5px;
 	--el-card-padding: 0px;
 	border-width: 0;
+	position: relative;
 }
 
 .el-card:hover {
@@ -184,11 +225,20 @@ onBeforeRouteUpdate(async (to, from, next) => {
 	width: 90%;
 	overflow: hidden;
 	display: -webkit-box;
-	/*文字换行4次，此后省略*/
+	/*文字换行2次，此后省略*/
 	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 3;
+	-webkit-line-clamp: 2;
 	text-overflow: ellipsis;
 	word-wrap: break-word;
+}
+
+.img-info {
+	position: absolute;
+	top: 1%;
+	font-weight: 600;
+	color: #dddddd;
+	width: 100%;
+	pointer-events: none; /* 让鼠标事件穿透 */
 }
 
 a {

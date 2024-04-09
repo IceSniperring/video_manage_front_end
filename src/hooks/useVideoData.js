@@ -24,7 +24,15 @@ export function useVideoData(serverUrl) {
                     }
                 }))
             });
-            videoInfoList.value = response.data.records;
+            let videoInfo = response.data.records
+            videoInfoList.value = videoInfo.map(function (video) {
+                return Object.defineProperty(video, "isHover", {
+                    value: false,
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                });
+            });
             total.value = response.data.total;
             pageNum.value = response.data.pages;
             return "获取成功"

@@ -188,7 +188,7 @@ onMounted(() => {
 		param.set("uid", localUserInfo.id)
 		param.set("vid", route.query.id)
 		axios.post(historyUrl, param).then((response) => {
-			console.log(response.data)
+
 		})
 	}
 })
@@ -224,7 +224,6 @@ onBeforeRouteUpdate(async (to, from) => {
 		param.set("uid", localUserInfo.id)
 		param.set("vid", to.query.id)
 		axios.post(historyUrl, param).then((response) => {
-			console.log(response.data)
 		})
 	}
 })

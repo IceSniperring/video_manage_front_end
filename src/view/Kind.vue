@@ -21,8 +21,16 @@
 							<el-card class="box-card">
 								<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
 								          style="width: 100%" v-loading="isLoading" @load="onLoaded"
-								          alt="加载失败" :fit="'cover'" :style="'height:'+windowHeight/4+'px'"/>
+								          alt="加载失败" :fit="'cover'" :style="'height:'+windowHeight/4+'px'"
+								          @mouseenter="videoInfo.isHover=true" @mouseleave="videoInfo.isHover=false"/>
 								<p>{{ videoInfo.title }}</p>
+								<transition name="el-fade-in-linear">
+									<div class="img-info" v-show="videoInfo.isHover">
+										<p style="font-size: 16px;margin-bottom: 20px">{{ videoInfo.title }}</p>
+										<p>视频id：{{ videoInfo.id }}</p>
+										<p>上传时间：{{ videoInfo.uploadDate }}</p>
+									</div>
+								</transition>
 							</el-card>
 						</router-link>
 					</el-col>
@@ -84,6 +92,7 @@ onMounted(() => {
 		windowWidth.value = document.body.clientWidth
 		windowHeight.value = window.innerHeight
 	})
+	console.log(videoInfoList)
 });
 
 function getData() {
@@ -129,13 +138,14 @@ onBeforeRouteUpdate((to, from, next) => {
 }
 
 .el-image:hover {
-	filter: brightness(60%);
+	filter: brightness(30%);
 }
 
 .el-card {
 	border-radius: 5px;
 	--el-card-padding: 0px;
 	border-width: 0;
+	position: relative;
 }
 
 .el-card:hover {
@@ -148,11 +158,20 @@ onBeforeRouteUpdate((to, from, next) => {
 	width: 94%;
 	overflow: hidden;
 	display: -webkit-box;
-	/*文字换行4次，此后省略*/
+	/*文字换行2次，此后省略*/
 	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 3;
+	-webkit-line-clamp: 2;
 	text-overflow: ellipsis;
 	word-wrap: break-word;
+}
+
+.img-info {
+	position: absolute;
+	top: 1%;
+	font-weight: 600;
+	color: #dddddd;
+	width: 100%;
+	pointer-events: none; /* 让鼠标事件穿透 */
 }
 
 a {
