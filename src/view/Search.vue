@@ -20,7 +20,7 @@
                 query:{
                   id:videoInfo.id
                 }
-              }">
+              }" target="_blank">
 							<el-card class="box-card">
 								<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
 								          style="width: 100%" :style="'height:'+windowHeight/4+'px'"

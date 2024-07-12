@@ -15,7 +15,7 @@
                  query: {
                     id:postInfo.id
                 }
-							}">
+							}" target="_blank">
 									<el-image :src="`${inject('videoSourceUrl')}${postInfo.postPath}`"
 									          alt="加载失败" style="width: 100%" :style="'height:'+windowHeight/2+'px'" :fit="'cover'"/>
 								</router-link>
@@ -31,7 +31,7 @@
                  query: {
                     id:videoInfo.id
                 }
-							}">
+							}"  target="_blank">
 							<el-card class="box-card">
 								<el-image :src="`${inject('videoSourceUrl')}${videoInfo.postPath}`"
 								          alt="加载失败" :fit="'cover'" v-loading="isLoading"

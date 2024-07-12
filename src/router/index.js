@@ -65,5 +65,8 @@ export const router = createRouter({
             path: "/:catchAll(.*)",
             redirect: "/404"
         }
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+        return { x: 0, y: 0 }; // 每次导航都将页面滚动到顶部
+    }
 })
